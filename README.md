@@ -44,43 +44,44 @@ https://learn.javascript.ru/promise-chaining  цепочки Промисов
 https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Promise
     Promise
 
-const getResource = async (url) => {
-  const res = await fetch(url);       // Return promice
-  return res.json();      // return Promise json data
-  
-};
+    const getResource = async (url) => {
+      const res = await fetch(url);       // Return promice
+      return res.json();      // return Promise json data
+
+    };
 
 // const prourl = "https://cors-anywhere.herokuapp.com/";
 
-getResource('https://swapi.co/api/people/1/')
-  .then((body) => {
-    console.log(body);
-  });
+    getResource('https://swapi.co/api/people/1/')
+      .then((body) => {
+        console.log(body);
+      });
 
 Эти два кода идентичны
 
-// fetch('https://swapi.co/api/people/1/')
-//   .then((res) => {
-//     return res.json();
-//   })
-//   .then((body) => {
-//     console.log(body);
-//   });
+    // fetch('https://swapi.co/api/people/1/')
+    //   .then((res) => {
+    //     return res.json();
+    //   })
+    //   .then((body) => {
+    //     console.log(body);
+    //   });
 
 
 // Асинхронное поведение программы
-const myUrl=`https://swapi.co/api/people/1`
- 
-const getSky = async (url) => {
-    const result = await fetch(url) 
-    return await result.json()
-}
-getSky(myUrl)
-  .then((resp) => {
-    console.log("responce=", resp);
-  });
-console.log("ME was");
-console.log("ME was 1");
+
+      const myUrl=`https://swapi.co/api/people/1`
+
+      const getSky = async (url) => {
+          const result = await fetch(url) 
+          return await result.json()
+      }
+      getSky(myUrl)
+        .then((resp) => {
+          console.log("responce=", resp);
+        });
+      console.log("ME was");
+      console.log("ME was 1");
 // Очередность результататов в консоли:
 
 // Me was
@@ -99,25 +100,25 @@ console.log("ME was 1");
   из OK - статусов (200-299)
 
 
-const getResource = async (url) => {
-  const res = await fetch(url);
- // 
-  if (!res.ok) {                                      <-------
-    throw new Error(`Could not fetch ${url}` +        <-------
-    `, received ${res.status}`);                      <-------
-  };
-  return res.json();
-};
+    const getResource = async (url) => {
+      const res = await fetch(url);
+     // 
+      if (!res.ok) {                                      <-------
+        throw new Error(`Could not fetch ${url}` +        <-------
+        `, received ${res.status}`);                      <-------
+      };
+      return res.json();
+    };
 
 // const prourl = "https://cors-anywhere.herokuapp.com/";
 
-getResource('https://swapi.co/api/people/1ываы/')  <------- добавленно 1ываы 
-  .then((body) => {                                      для вывода ошибки
-    console.log(body);
-  })
-  .catch((err) => {
-    console.error('Could not fetch' ,err);          <---------
-  });
+    getResource('https://swapi.co/api/people/1ываы/')  <------- добавленно 1ываы 
+      .then((body) => {                                      для вывода ошибки
+        console.log(body);
+      })
+      .catch((err) => {
+        console.error('Could not fetch' ,err);          <---------
+      });
 
 // Если нет ответа от сервера 
 // Could not fetch TypeError: Failed to fetch 
@@ -137,53 +138,54 @@ getResource('https://swapi.co/api/people/1ываы/')  <------- добавлен
 
 class SwapiService {
  // Через нижнее подчеркивание говорим другим разработчикам что это
- // приватная часть класса и ее не следует использовать или изменять снаруже   
-  _apiBase = 'https://swapi.co/api'; 
-
-  async getResource(url) {
-    const res = await fetch(`${this._apiBase}${url}`);
+ // приватная часть класса и ее не следует использовать или изменять снаруже 
  
-    if (!res.ok) {
-      throw new Error(`Could not fetch ${url}` + 
-      `, received ${res.status}`);
+    _apiBase = 'https://swapi.dev/api';
+
+    async getResource(url) {
+      const res = await fetch(`${this._apiBase}${url}`);
+
+      if (!res.ok) {
+        throw new Error(`Could not fetch ${url}` + 
+        `, received ${res.status}`);
+      };
+
+      return res.json();
     };
 
-    return res.json();
-  };
+    async getAllPeople() {
+      const res = await this.getResource(`/people/`);
+      return res.results;
+    };
 
-  async getAllPeople() {
-    const res = await this.getResource(`/people/`);
-    return res.results;
-  };
+    getPerson(id) {
+      return this.getResource(`/people/${id}/`);
+    };
 
-  getPerson(id) {
-    return this.getResource(`/people/${id}/`);
-  };
+    async getAllPlanets() {
+      const res = await this.getResource(`/planets/`);
+      return res.results;
+    };
 
-  async getAllPlanets() {
-    const res = await this.getResource(`/planets/`);
-    return res.results;
-  };
+    getPlanet(id) {
+      return this.getResource(`/planets/${id}/`);
+    };
 
-  getPlanet(id) {
-    return this.getResource(`/planets/${id}/`);
-  };
+      async getAllStarships() {
+        const res = await this.getResource(`/starships/`);
+        return res.results;https://github.com/visantinian/react-usefull-sripts/blob/master/generate-components-files.js
+      };
 
-  async getAllStarships() {
-    const res = await this.getResource(`/starships/`);
-    return res.results;https://github.com/visantinian/react-usefull-sripts/blob/master/generate-components-files.js
-  };
+      getStarhip(id) {
+        return this.getResource(`/starships/${id}/`);
+      };
+    };
 
-  getStarhip(id) {
-    return this.getResource(`/starships/${id}/`);
-  };
-};
+    const swapi = new SwapiService();
 
-const swapi = new SwapiService();
-
-swapi.getPerson(3).then((p) => {
-  console.log(p.name);
-});
+    swapi.getPerson(3).then((p) => {
+      console.log(p.name);
+    });
 
 
 
@@ -202,73 +204,75 @@ swapi.getPerson(3).then((p) => {
 -В .then() обновляем состояние компонента
 
 <!-- random-planet.js -->
-import React, { Component } from 'react';
-import SwapiService from '../../services/swapi-service';  <-------
-import './random-planet.css';
 
-export default class RandomPlanet extends Component {
-  // Привязываем SwapiService
-  // Создаём поле класса (class field)
-  swapiService = new SwapiService();                      <-------
+    import React, { Component } from 'react';
+    import SwapiService from '../../services/swapi-service';  <-------
+    import './random-planet.css';
 
-  state = {                                               <-------
-    id:null,                                            <-------
-    name: null,                                           <-------
-    population: null,                                   <-------
-    rotationPeriod: null,                               <-------
-    diameter: null                                      <-------
-  };
-  // Вызываем updatePlanet из конструктора                <-------
-  constructor () {
-    super();
-    this.updatePlanet();                                    <-------
-  };
+    export default class RandomPlanet extends Component {
+      // Привязываем SwapiService
+      // Создаём поле класса (class field)
+      swapiService = new SwapiService();                      <-------
+
+      state = {                                               <-------
+        id:null,                                            <-------
+        name: null,                                           <-------
+        population: null,                                   <-------
+        rotationPeriod: null,                               <-------
+        diameter: null                                      <-------
+      };
+      // Вызываем updatePlanet из конструктора                <-------
+      constructor () {
+        super();
+        this.updatePlanet();                                    <-------
+      };
 
  // Обновляем планету с помощью swapiService и получаем       <-------
  //   данные с сервера  
-  updatePlanet() {                                            <-------
-    const id = Math.floor(Math.random() * 25) + 2;    <-Вызываем рандомно->
-    this.swapiService
-      .getPlanet(id)                                    <-------
-      .then((planet) => {                               <-------
-        this.setState({                                   <-------
-          id,                                             <-------
-          name: planet.name,                              <-------
-          population: planet.population,                  <-------
-          rotationPeriod: planet.rotation_period,         <-------
-          diameter: planet.diameter                       <-------
+ 
+    updatePlanet() {                                            <-------
+      const id = Math.floor(Math.random() * 25) + 2;    <-Вызываем рандомно->
+      this.swapiService
+        .getPlanet(id)                                    <-------
+        .then((planet) => {                               <-------
+          this.setState({                                   <-------
+            id,                                             <-------
+            name: planet.name,                              <-------
+            population: planet.population,                  <-------
+            rotationPeriod: planet.rotation_period,         <-------
+            diameter: planet.diameter                       <-------
+          });
         });
-      });
-  };
+    };
 
-  render() {
+    render() {
 
-    const { id, name, population,
-            rotationPeriod, diameter } = this.state;      <-------
+      const { id, name, population,
+              rotationPeriod, diameter } = this.state;      <-------
 
-    return (
-      <div className="random-planet jumbotron rounded">
-        <img className="planet-image"
-             src={`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`} /> <--
-        <div>
-          <h4>{name}</h4>                                         <-------
-          <ul className="list-group list-group-flush">
-            <li className="list-group-item">
-              <span className="term">Population</span>
-              <span>{population}</span>                           <-------
-            </li>
-            <li className="list-group-item">
-              <span className="term">Rotation Period</span>
-              <span>{rotationPeriod}</span>                         <-------
-            </li>
-            <li className="list-group-item">
-              <span className="term">Diameter</span>
-              <span>{diameter}</span>                               <-------
-            </li>
-          </ul>
+      return (
+        <div className="random-planet jumbotron rounded">
+          <img className="planet-image"
+               src={`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`} /> <--
+          <div>
+            <h4>{name}</h4>                                         <-------
+            <ul className="list-group list-group-flush">
+              <li className="list-group-item">
+                <span className="term">Population</span>
+                <span>{population}</span>                           <-------
+              </li>
+              <li className="list-group-item">
+                <span className="term">Rotation Period</span>
+                <span>{rotationPeriod}</span>                         <-------
+              </li>
+              <li className="list-group-item">
+                <span className="term">Diameter</span>
+                <span>{diameter}</span>                               <-------
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    );
+      );
   }
 };
 
@@ -283,155 +287,159 @@ export default class RandomPlanet extends Component {
   СО СЛОЖНЫМИ МОДЕЛЯМИ ДАННЫХ, КОТОРЫЕ МОГУТ ИЗМЕНЯТЬСЯ!
 
 <!-- random-planet.js -->
-import React, { Component } from 'react';
-import SwapiService from '../../services/swapi-service';
 
-import './random-planet.css';
+    import React, { Component } from 'react';
+    import SwapiService from '../../services/swapi-service';
 
-export default class RandomPlanet extends Component {
-  // Привязываем SwapiService
-  // Создаём поле класса (class field)
-  swapiService = new SwapiService();
+    import './random-planet.css';
 
-  state = {                                     <-------
-    planet: {}                                  <-------
-  };
-  // Вызываем updatePlanet из конструктора
-  constructor () {
-    super();
-    this.updatePlanet();
-  };
+    export default class RandomPlanet extends Component {
+      // Привязываем SwapiService
+      // Создаём поле класса (class field)
+      swapiService = new SwapiService();
 
-  onPlanetLoaded = (planet) => {         <-Отрефакторили код->
-    this.setState({ planet });              <-------
-  };
+      state = {                                     <-------
+        planet: {}                                  <-------
+      };
+      // Вызываем updatePlanet из конструктора
+      constructor () {
+        super();
+        this.updatePlanet();
+      };
+
+      onPlanetLoaded = (planet) => {         <-Отрефакторили код->
+        this.setState({ planet });              <-------
+      };
 
  // Обновляем планету с помощью swapiService и получаем
  //   данные с сервера  
-  updatePlanet() {
-    const id = Math.floor(Math.random() * 25) + 2;
-    this.swapiService
-      .getPlanet(id)
-      .then(this.onPlanetLoaded);
-  };
+ 
+    updatePlanet() {
+      const id = Math.floor(Math.random() * 25) + 2;
+      this.swapiService
+        .getPlanet(id)
+        .then(this.onPlanetLoaded);
+    };
 
-  render() {
+    render() {
 
-    const { planet: { id, name, population,           <-------
-            rotationPeriod, diameter } } = this.state;
+      const { planet: { id, name, population,           <-------
+              rotationPeriod, diameter } } = this.state;
 
-    return (
-      <div className="random-planet jumbotron rounded">
-        <img className="planet-image"
-             src={`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`} />
-        <div>
-          <h4>{name}</h4>
-          <ul className="list-group list-group-flush">
-            <li className="list-group-item">
-              <span className="term">Population</span>
-              <span>{population}</span>
-            </li>
-            <li className="list-group-item">
-              <span className="term">Rotation Period</span>
-              <span>{rotationPeriod}</span>
-            </li>
-            <li className="list-group-item">
-              <span className="term">Diameter</span>
-              <span>{diameter}</span>
-            </li>
-          </ul>
+      return (
+        <div className="random-planet jumbotron rounded">
+          <img className="planet-image"
+               src={`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`} />
+          <div>
+            <h4>{name}</h4>
+            <ul className="list-group list-group-flush">
+              <li className="list-group-item">
+                <span className="term">Population</span>
+                <span>{population}</span>
+              </li>
+              <li className="list-group-item">
+                <span className="term">Rotation Period</span>
+                <span>{rotationPeriod}</span>
+              </li>
+              <li className="list-group-item">
+                <span className="term">Diameter</span>
+                <span>{diameter}</span>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    );
-  };
-};
+      );
+    };
+    };
 
 <!-- swapi-service.js -->
-export default class SwapiService {
-  // Через нижнее подчеркивание говорим другим разработчикам что это
-  // приватная часть класса и ее не следует использовать или изменять снаруже   
-  _apiBase = 'https://swapi.co/api';
 
-  async getResource(url) {
-    const res = await fetch(`${this._apiBase}${url}`);
+    export default class SwapiService {
+      // Через нижнее подчеркивание говорим другим разработчикам что это
+      // приватная часть класса и ее не следует использовать или изменять снаруже   
 
-    if (!res.ok) {
-      throw new Error(`Could not fetch ${url}` + 
-        `, received ${res.status}`);
+      _apiBase = 'https://swapi.dev/api';
+
+      async getResource(url) {
+        const res = await fetch(`${this._apiBase}${url}`);
+
+        if (!res.ok) {
+          throw new Error(`Could not fetch ${url}` + 
+            `, received ${res.status}`);
+        };
+
+        return res.json();
+      };
+
+      async getAllPeople() {                                          <-------
+        const res = await this.getResource(`/people/`);
+        return res.results.map(this._transformPerson);
+      };                                                              <-------
+
+      async getPerson(id) {                                           <-------
+        const person = await this.getResource(`/people/${id}/`);
+        return this._transformPerson(person);
+      };                                                              <-------
+
+      async getAllPlanets() {                                         <-------
+        const res = await this.getResource(`/planets/`);
+        return res.results.map(this._transformPlanet);  
+      }; /*Передаём уже изменённую коллекцию*/                        <-------
+
+      async getPlanet(id) {                                           <-------
+        const planet = await this.getResource(`/planets/${id}/`);
+        return this._transformPlanet(planet);
+      };                                                              <-------
+
+      async getAllStarships() {                                       <-------
+        const res = await this.getResource(`/starships/`);
+        return res.results.map(this._transformStarship);
+      };                                                              <-------
+
+      async getStarhip(id) {                                          <-------
+        const starship = await this.getResource(`/starships/${id}/`);
+        return this._transformStarship(starship);
+      };                                                              <-------
+
+      _extractId(item) {                          <-------
+        const idRegExp = /\/([0-9]*)\/$/;    <-Применили RegExp для отлова ID из url->
+        return item.url.match(idRegExp)[1];  <-[1] это та группа id которая нужна. [0] всё выражение->
+      };
+
+      _transformPlanet(planet) {                  <-------
+        return {
+          id: this._extractId(planet),
+          name: planet.name,
+          population: planet.population,
+          rotationPeriod: planet.rotation_period,
+          diameter: planet.diameter
+        };
+      };                                          <-------
+
+      _transformStarship(starship) {              <-------
+        return {
+          id: this._extractId(starship),
+          name: starship.name,
+          model: starship.model,
+          manufacturer: starship.manufacturer,
+          costInCredits: starship.costInCredits,
+          length: starship.length,
+          crew: starship.crew,
+          passengers: starship.passengers,
+          cargoCapacity: starship.cargoCapacity
+        };
+      };                                          <-------
+
+      _transformPerson(person) {                  <-------
+        return {
+          id: this._extractId(person),
+          name: person.name,
+          gender: person.gender,
+          birthYear: person.birthYear,
+          eyeColor: person.eyeColor
+        };
+      };                                           <-------
     };
-
-    return res.json();
-  };
-
-  async getAllPeople() {                                          <-------
-    const res = await this.getResource(`/people/`);
-    return res.results.map(this._transformPerson);
-  };                                                              <-------
-
-  async getPerson(id) {                                           <-------
-    const person = await this.getResource(`/people/${id}/`);
-    return this._transformPerson(person);
-  };                                                              <-------
-
-  async getAllPlanets() {                                         <-------
-    const res = await this.getResource(`/planets/`);
-    return res.results.map(this._transformPlanet);  
-  }; /*Передаём уже изменённую коллекцию*/                        <-------
-
-  async getPlanet(id) {                                           <-------
-    const planet = await this.getResource(`/planets/${id}/`);
-    return this._transformPlanet(planet);
-  };                                                              <-------
-
-  async getAllStarships() {                                       <-------
-    const res = await this.getResource(`/starships/`);
-    return res.results.map(this._transformStarship);
-  };                                                              <-------
-
-  async getStarhip(id) {                                          <-------
-    const starship = await this.getResource(`/starships/${id}/`);
-    return this._transformStarship(starship);
-  };                                                              <-------
-
-  _extractId(item) {                          <-------
-    const idRegExp = /\/([0-9]*)\/$/;    <-Применили RegExp для отлова ID из url->
-    return item.url.match(idRegExp)[1];  <-[1] это та группа id которая нужна. [0] всё выражение->
-  };
-
-  _transformPlanet(planet) {                  <-------
-    return {
-      id: this._extractId(planet),
-      name: planet.name,
-      population: planet.population,
-      rotationPeriod: planet.rotation_period,
-      diameter: planet.diameter
-    };
-  };                                          <-------
-
-  _transformStarship(starship) {              <-------
-    return {
-      id: this._extractId(starship),
-      name: starship.name,
-      model: starship.model,
-      manufacturer: starship.manufacturer,
-      costInCredits: starship.costInCredits,
-      length: starship.length,
-      crew: starship.crew,
-      passengers: starship.passengers,
-      cargoCapacity: starship.cargoCapacity
-    };
-  };                                          <-------
-
-  _transformPerson(person) {                  <-------
-    return {
-      id: this._extractId(person),
-      name: person.name,
-      gender: person.gender,
-      birthYear: person.birthYear,
-      eyeColor: person.eyeColor
-    };
-  };                                           <-------
-};
 
 
 ---Создаем индикатор загрузки
@@ -451,89 +459,90 @@ export default class SwapiService {
   лишних DOM-объектов
 
 <!-- random-planet.js -->
-import React, { Component } from 'react';
 
-import SwapiService from '../../services/swapi-service';
+    import React, { Component } from 'react';
 
-import './random-planet.css';
-import Spinner from '../spinner/spinner';               <------
+    import SwapiService from '../../services/swapi-service';
 
-export default class RandomPlanet extends Component {
-  // Привязываем SwapiService
-  // Создаём поле класса (class field)
-  swapiService = new SwapiService();
+    import './random-planet.css';
+    import Spinner from '../spinner/spinner';               <------
 
-  state = {
-    planet: {},
-    loading: true                                       <------
-  };
-  // Вызываем updatePlanet из конструктора
-  constructor () {
-    super();
-    this.updatePlanet();
-  };
+    export default class RandomPlanet extends Component {
+      // Привязываем SwapiService
+      // Создаём поле класса (class field)
+      swapiService = new SwapiService();
 
-  onPlanetLoaded = (planet) => {
-    this.setState({ 
-      planet,
-      loading: false                                    <------
-    }); // Спиннер пропадает когда данные появляются
-  };
- // Обновляем планету с помощью swapiService и получаем
- //   данные с сервера  
-  updatePlanet() {
-    const id = Math.floor(Math.random() * 25) + 2;
-    this.swapiService
-      .getPlanet(id)
-      .then(this.onPlanetLoaded);
-  };
+      state = {
+        planet: {},
+        loading: true                                       <------
+      };
+      // Вызываем updatePlanet из конструктора
+      constructor () {
+        super();
+        this.updatePlanet();
+      };
 
-  render() {
+      onPlanetLoaded = (planet) => {
+        this.setState({ 
+          planet,
+          loading: false                                    <------
+        }); // Спиннер пропадает когда данные появляются
+      };
+     // Обновляем планету с помощью swapiService и получаем
+     //   данные с сервера  
+      updatePlanet() {
+        const id = Math.floor(Math.random() * 25) + 2;
+        this.swapiService
+          .getPlanet(id)
+          .then(this.onPlanetLoaded);
+      };
 
-    const { planet, loading } = this.state;                         <------
- // Если идет загрузка то возвращаем Спиннер или отображаем Контент
-    const spinner = loading ? <Spinner /> : null;                       <------
-    const content = !loading ? <PlanetView planet={planet} /> : null;   <------
+      render() {
 
-    return (
-      <div className="random-planet jumbotron rounded">
-        {spinner}                                                       <------
-        {content}                                                       <------
-     </div>
-    );
-  };
-};
+        const { planet, loading } = this.state;                         <------
+     // Если идет загрузка то возвращаем Спиннер или отображаем Контент
+        const spinner = loading ? <Spinner /> : null;                       <------
+        const content = !loading ? <PlanetView planet={planet} /> : null;   <------
 
-const PlanetView = ({ planet }) => {
+        return (
+          <div className="random-planet jumbotron rounded">
+            {spinner}                                                       <------
+            {content}                                                       <------
+         </div>
+        );
+      };
+    };
 
-  const { id, name, population,                                         <------
-          rotationPeriod, diameter } = planet;                          <------
+    const PlanetView = ({ planet }) => {
 
-  return (
+      const { id, name, population,                                         <------
+              rotationPeriod, diameter } = planet;                          <------
 
-    <React.Fragment>                                                    <------
-      <img className="planet-image"
-          src={`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`} />
-      <div>
-        <h4>{name}</h4>
-          <ul className="list-group list-group-flush">
-            <li className="list-group-item">
-              <span className="term">Population</span>
-              <span>{population}</span>
-            </li>
-            <li className="list-group-item">
-              <span className="term">Rotation Period</span>
-              <span>{rotationPeriod}</span>
-            </li>
-            <li className="list-group-item">
-              <span className="term">Diameter</span>
-              <span>{diameter}</span>
-            </li>
-          </ul>
-      </div>
-    </React.Fragment>                                                     <------
-  );
-};
+      return (
+
+        <React.Fragment>                                                    <------
+          <img className="planet-image"
+              src={`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`} />
+          <div>
+            <h4>{name}</h4>
+              <ul className="list-group list-group-flush">
+                <li className="list-group-item">
+                  <span className="term">Population</span>
+                  <span>{population}</span>
+                </li>
+                <li className="list-group-item">
+                  <span className="term">Rotation Period</span>
+                  <span>{rotationPeriod}</span>
+                </li>
+                <li className="list-group-item">
+                  <span className="term">Diameter</span>
+                  <span>{diameter}</span>
+                </li>
+              </ul>
+          </div>
+        </React.Fragment>                                                     <------
+      );
+    };
 
 
 ---Обработка ошибок
@@ -545,129 +554,130 @@ const PlanetView = ({ planet }) => {
 -Будьте внимательны с async/await - код с await может выбросить Error
 
 <!-- random-planet.js -->
-import React, { Component } from 'react';
 
-import SwapiService from '../../services/swapi-service';
+    import React, { Component } from 'react';
 
-import './random-planet.css';
-import Spinner from '../spinner/spinner';
-import ErrorIndicator from '../error-indicator';
+    import SwapiService from '../../services/swapi-service';
 
-export default class RandomPlanet extends Component {
-  // Привязываем SwapiService
-  // Создаём поле класса (class field)
-  swapiService = new SwapiService();
+    import './random-planet.css';
+    import Spinner from '../spinner/spinner';
+    import ErrorIndicator from '../error-indicator';
 
-  state = {
-    planet: {},
-    loading: true,
-    error: false                                              <------
-  };
-  // Вызываем updatePlanet из конструктора
-  constructor () {
-    super();
-    this.updatePlanet();
-  };
+    export default class RandomPlanet extends Component {
+      // Привязываем SwapiService
+      // Создаём поле класса (class field)
+      swapiService = new SwapiService();
 
-  onPlanetLoaded = (planet) => {
-    this.setState({ 
-      planet,
-      loading: false                                            <------
-    }); // Спиннер пропадает когда данные появляются
-  };
+      state = {
+        planet: {},
+        loading: true,
+        error: false                                              <------
+      };
+      // Вызываем updatePlanet из конструктора
+      constructor () {
+        super();
+        this.updatePlanet();
+      };
 
-  onError = (err) => {                                          <------
-    this.setState({
-      error: true,
-      loading:false
-    });
-  };                                                            <------
+      onPlanetLoaded = (planet) => {
+        this.setState({ 
+          planet,
+          loading: false                                            <------
+        }); // Спиннер пропадает когда данные появляются
+      };
 
- // Обновляем планету с помощью swapiService и получаем
- //   данные с сервера  
-  updatePlanet() {
-    // const id = Math.floor(Math.random() * 25000) + 2;
-    const id = 1300;                                              <------
-    this.swapiService
-      .getPlanet(id)
-      .then(this.onPlanetLoaded)
-      .catch(this.onError);                                       <------
-  };
+      onError = (err) => {                                          <------
+        this.setState({
+          error: true,
+          loading:false
+        });
+      };                                                            <------
 
-  render() {
+     // Обновляем планету с помощью swapiService и получаем
+     //   данные с сервера  
+      updatePlanet() {
+        // const id = Math.floor(Math.random() * 25000) + 2;
+        const id = 1300;                                              <------
+        this.swapiService
+          .getPlanet(id)
+          .then(this.onPlanetLoaded)
+          .catch(this.onError);                                       <------
+      };
 
-    const { planet, loading, error } = this.state;                  <------
- 
-    const hasDate = !(loading || error);                            <------
+      render() {
 
-    const errorMessage = error ? <ErrorIndicator /> : null;         <------
+        const { planet, loading, error } = this.state;                  <------
 
- // Если идет загрузка то возвращаем Спиннер или отображаем Контент
-    const spinner = loading ? <Spinner /> : null;
-    const content = hasDate ? <PlanetView planet={planet} /> : null;  <------
+        const hasDate = !(loading || error);                            <------
 
-    return (
-      <div className="random-planet jumbotron rounded">
-        {errorMessage}                                    <------
-        {spinner}
-        {content}
-     </div>
-    );
-  };
-};
+        const errorMessage = error ? <ErrorIndicator /> : null;         <------
 
-const PlanetView = ({ planet }) => {
+     // Если идет загрузка то возвращаем Спиннер или отображаем Контент
+        const spinner = loading ? <Spinner /> : null;
+        const content = hasDate ? <PlanetView planet={planet} /> : null;  <------
 
-  const { id, name, population,
-          rotationPeriod, diameter } = planet;
+        return (
+          <div className="random-planet jumbotron rounded">
+            {errorMessage}                                    <------
+            {spinner}
+            {content}
+         </div>
+        );
+      };
+    };
 
-  return (
+    const PlanetView = ({ planet }) => {
 
-    <React.Fragment>
-........
-    </React.Fragment>
-  );
-};
+      const { id, name, population,
+              rotationPeriod, diameter } = planet;
 
-<!-- error-indicator.js -->
-import React from 'react';
+      return (
 
-import './error-indicator.css';
-import icon from './death-star.jpeg';         <-Добавленна картинка->
+        <React.Fragment>
+    ........
+        </React.Fragment>
+      );
+    };
 
-const ErrorIndicator = () => {
-  return (
-    <div className='error-indicator'>
-      <img src={icon} alt="error icon"/>
-      <span className="boom">BOOM!!!</span>
-      <span>
-        something has gone terribly wrong
-      </span>
-      <span>
-        (but we already sent droids to fix it problrm)
-      </span>
-    </div>
-  );
-};
+    <!-- error-indicator.js -->
+    import React from 'react';
 
-export default ErrorIndicator;
+    import './error-indicator.css';
+    import icon from './death-star.jpeg';         <-Добавленна картинка->
 
-<!-- error-indicator.css -->
-.error-indicator {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: aqua;
-}
+    const ErrorIndicator = () => {
+      return (
+        <div className='error-indicator'>
+          <img src={icon} alt="error icon"/>
+          <span className="boom">BOOM!!!</span>
+          <span>
+            something has gone terribly wrong
+          </span>
+          <span>
+            (but we already sent droids to fix it problrm)
+          </span>
+        </div>
+      );
+    };
 
-.error-indicator img {
-  margin-bottom: 1rem;
-}
+    export default ErrorIndicator;
 
-.error-indicator .boom {
-  font-size: 1.8rem;
-}
+    <!-- error-indicator.css -->
+    .error-indicator {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: aqua;
+    }
+
+    .error-indicator img {
+      margin-bottom: 1rem;
+    }
+
+    .error-indicator .boom {
+      font-size: 1.8rem;
+    }
 
 
 
@@ -677,57 +687,57 @@ export default ErrorIndicator;
 -К примеру, перед тем как компонент будет удален, неообхлдимо очистить ресурсы
 -В React для этого есть механизм - Методы Жизненного Цикла (lifecycle hooks)
 
-<!-- app.js -->
-import React, { Component } from 'react';
+    <!-- app.js -->
+    import React, { Component } from 'react';
 
-import Header from '../header';
-import RandomPlanet from '../random-planet';
-import ItemList from '../item-list';
-import PersonDetails from '../person-details';
+    import Header from '../header';
+    import RandomPlanet from '../random-planet';
+    import ItemList from '../item-list';
+    import PersonDetails from '../person-details';
 
-import './app.css';
+    import './app.css';
 
-export default class App extends Component {                  <-------
+    export default class App extends Component {                  <-------
 
-  state = {                                                     <-------
-    showRandomPlanet: true                              
-  };                                                          <-------
+      state = {                                                     <-------
+        showRandomPlanet: true                              
+      };                                                          <-------
 
-  toggleRandomPlanet = () => {                                <-------
-    this.setState((state) => {
-      return {
-        showRandomPlanet: !state.showRandomPlanet
-      };
-    });
-  };                                                          <-------
+      toggleRandomPlanet = () => {                                <-------
+        this.setState((state) => {
+          return {
+            showRandomPlanet: !state.showRandomPlanet
+          };
+        });
+      };                                                          <-------
 
-  render() {
+      render() {
 
-    const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;  <-------
+        const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;  <-------
 
-    return (
-      <div className="stardb-app">
-        <Header />
-        { planet }
+        return (
+          <div className="stardb-app">
+            <Header />
+            { planet }
 
-        <button                                                   <-------
-          className="toggle-planet btn btn-warning btn-1g"
-          onClick={this.toggleRandomPlanet}>
-          Toggle Random Planet                                <-------
-        </button>                                                 <-------
+            <button                                                   <-------
+              className="toggle-planet btn btn-warning btn-1g"
+              onClick={this.toggleRandomPlanet}>
+              Toggle Random Planet                                <-------
+            </button>                                                 <-------
 
-        <div className="row mb2">
-          <div className="col-md-6">
-            <ItemList />
+            <div className="row mb2">
+              <div className="col-md-6">
+                <ItemList />
+              </div>
+              <div className="col-md-6">
+                <PersonDetails />
+              </div>
+            </div>
           </div>
-          <div className="col-md-6">
-            <PersonDetails />
-          </div>
-        </div>
-      </div>
-    );
-  };  
-};
+        );
+      };  
+    };
 
 
 ---Методы жизненного цикла
@@ -763,93 +773,93 @@ Error
 --Это когда компонент получает какую то ошибку которая не была поймана раньше
 componentDidCatch()
 
-<!-- random-planet.js -->
-import React, { Component } from 'react';
-......
+    <!-- random-planet.js -->
+    import React, { Component } from 'react';
+    ......
 
-export default class RandomPlanet extends Component {
-  // Привязываем SwapiService
-  // Создаём поле класса (class field)
-  swapiService = new SwapiService();
+    export default class RandomPlanet extends Component {
+      // Привязываем SwapiService
+      // Создаём поле класса (class field)
+      swapiService = new SwapiService();
 
-  state = {
-    planet: {},
-    loading: true,
-    error: false
-  };
-  // Вызываем updatePlanet из конструктора
-  constructor () {
-    super();
-    console.log('constructor()')                           <-------
-    this.updatePlanet();
-    this.interval = setInterval(this.updatePlanet, 10000);  <-------
-    // clearInterval(this.interval);                        <-------
-  };
+      state = {
+        planet: {},
+        loading: true,
+        error: false
+      };
+      // Вызываем updatePlanet из конструктора
+      constructor () {
+        super();
+        console.log('constructor()')                           <-------
+        this.updatePlanet();
+        this.interval = setInterval(this.updatePlanet, 10000);  <-------
+        // clearInterval(this.interval);                        <-------
+      };
 
-  componentDidMount() {                                       <-------
-    console.log('componentDidMount()');
-  };
+      componentDidMount() {                                       <-------
+        console.log('componentDidMount()');
+      };
 
-  componentWillUnmount() {                                    <-------
-    console.log('componentWillUnmount()');
-  };
+      componentWillUnmount() {                                    <-------
+        console.log('componentWillUnmount()');
+      };
 
-  onPlanetLoaded = (planet) => {
-    this.setState({ 
-      planet,
-      loading: false 
-    }); // Спиннер пропадает когда данные появляются
-  };
+      onPlanetLoaded = (planet) => {
+        this.setState({ 
+          planet,
+          loading: false 
+        }); // Спиннер пропадает когда данные появляются
+      };
 
-  onError = (err) => {
-    this.setState({
-      error: true,
-      loading:false
-    });
-  };
+      onError = (err) => {
+        this.setState({
+          error: true,
+          loading:false
+        });
+      };
 
- // Обновляем планету с помощью swapiService и получаем
- //   данные с сервера  
-  updatePlanet = () => {
-    console.log('update');                                  <-------
-    const id = Math.floor(Math.random() * 18) + 3;
-    // const id = 1300;
-    this.swapiService
-      .getPlanet(id)
-      .then(this.onPlanetLoaded)
-      .catch(this.onError);
-  };
+     // Обновляем планету с помощью swapiService и получаем
+     //   данные с сервера  
+      updatePlanet = () => {
+        console.log('update');                                  <-------
+        const id = Math.floor(Math.random() * 18) + 3;
+        // const id = 1300;
+        this.swapiService
+          .getPlanet(id)
+          .then(this.onPlanetLoaded)
+          .catch(this.onError);
+      };
 
-  render() {
-    console.log('render()');                                  <-------
-    const { planet, loading, error } = this.state;
- 
-    const hasDate = !(loading || error);
+      render() {
+        console.log('render()');                                  <-------
+        const { planet, loading, error } = this.state;
 
-    const errorMessage = error ? <ErrorIndicator /> : null;
-    const spinner = loading ? <Spinner /> : null;
-    const content = hasDate ? <PlanetView planet={planet} /> : null;
+        const hasDate = !(loading || error);
 
-    return (
-      <div className="random-planet jumbotron rounded">
-        {errorMessage}
-        {spinner}
-        {content}
-     </div>
-    );
-  };
-};
+        const errorMessage = error ? <ErrorIndicator /> : null;
+        const spinner = loading ? <Spinner /> : null;
+        const content = hasDate ? <PlanetView planet={planet} /> : null;
 
-const PlanetView = ({ planet }) => {
+        return (
+          <div className="random-planet jumbotron rounded">
+            {errorMessage}
+            {spinner}
+            {content}
+         </div>
+        );
+      };
+    };
 
-  const { id, name, population,
-          rotationPeriod, diameter } = planet;
+    const PlanetView = ({ planet }) => {
 
-  return (
-    <React.Fragment>
- .....
-  );
-};
+      const { id, name, population,
+              rotationPeriod, diameter } = planet;
+
+      return (
+        <React.Fragment>
+     .....
+      );
+    };
 
 
 
@@ -861,72 +871,72 @@ const PlanetView = ({ planet }) => {
 -
 -Не используйте КОНСТРУКТОР для кода, который создает побочные эфекты
 
-<!-- random-planet.js -->
-import React, { Component } from 'react';
+    <!-- random-planet.js -->
+    import React, { Component } from 'react';
 
-.........
+    .........
 
-export default class RandomPlanet extends Component {
-  // Привязываем SwapiService
-  // Создаём поле класса (class field)
-  swapiService = new SwapiService();
+    export default class RandomPlanet extends Component {
+      // Привязываем SwapiService
+      // Создаём поле класса (class field)
+      swapiService = new SwapiService();
 
-  state = {
-    planet: {},
-    loading: true,
-    error: false
-  };
-                                        <-КОНСТРУКТОР УДАЛЕН->
-  componentDidMount() {
-    this.updatePlanet();                        <-ДАННЫЕ ИЗ КОНСТРУКТОРА->
-    this.interval = setInterval(this.updatePlanet, 10000);
-    // clearInterval(this.interval);
-  };
+      state = {
+        planet: {},
+        loading: true,
+        error: false
+      };
+                                            <-КОНСТРУКТОР УДАЛЕН->
+      componentDidMount() {
+        this.updatePlanet();                        <-ДАННЫЕ ИЗ КОНСТРУКТОРА->
+        this.interval = setInterval(this.updatePlanet, 10000);
+        // clearInterval(this.interval);
+      };
 
-  componentWillUnmount() {
-    console.log('componentWillUnmount()');
-  };
+      componentWillUnmount() {
+        console.log('componentWillUnmount()');
+      };
 
-  onPlanetLoaded = (planet) => {
-    this.setState({ 
-      planet,
-      loading: false 
-    }); // Спиннер пропадает когда данные появляются
-  };
+      onPlanetLoaded = (planet) => {
+        this.setState({ 
+          planet,
+          loading: false 
+        }); // Спиннер пропадает когда данные появляются
+      };
 
-  onError = (err) => {
-    this.setState({
-      error: true,
-      loading:false
-    });
-  };
+      onError = (err) => {
+        this.setState({
+          error: true,
+          loading:false
+        });
+      };
 
- // Обновляем планету с помощью swapiService и получаем
- //   данные с сервера  
-  updatePlanet = () => {
-    console.log('update');
-    const id = Math.floor(Math.random() * 18) + 3;
-    // const id = 1300;
-    this.swapiService
-      .getPlanet(id)
-      .then(this.onPlanetLoaded)
-      .catch(this.onError);
-  };
+     // Обновляем планету с помощью swapiService и получаем
+     //   данные с сервера  
+      updatePlanet = () => {
+        console.log('update');
+        const id = Math.floor(Math.random() * 18) + 3;
+        // const id = 1300;
+        this.swapiService
+          .getPlanet(id)
+          .then(this.onPlanetLoaded)
+          .catch(this.onError);
+      };
 
-  render() {
-  .........
-};
+      render() {
+      .........
+    };
 
-const PlanetView = ({ planet }) => {
+    const PlanetView = ({ planet }) => {
 
-  const { id, name, population,
-          rotationPeriod, diameter } = planet;
+      const { id, name, population,
+              rotationPeriod, diameter } = planet;
 
-  return (
-    <React.Fragment>
-...
-  );
-};
+      return (
+        <React.Fragment>
+    ...
+      );
+    };
 
 
 
@@ -934,114 +944,114 @@ const PlanetView = ({ planet }) => {
 
 -componentDidMount() - хорошее место, для того что бы получать данные 
 
-<!-- item-list.js -->
-import React, { Component } from 'react';
+    <!-- item-list.js -->
+    import React, { Component } from 'react';
 
-import SwapiService from '../../services/swapi-service';
-......
+    import SwapiService from '../../services/swapi-service';
+    ......
 
-export default class ItemList extends Component {
+    export default class ItemList extends Component {
 
-  swapiService = new SwapiService();               <--------
+      swapiService = new SwapiService();               <--------
 
-  state = {                                     <--------
-    peopleList: null                            <--------
-  };
+      state = {                                     <--------
+        peopleList: null                            <--------
+      };
 
-  componentDidMount() {                         <--------
-    this.swapiService
-      .getAllPeople()
-      .then((peopleList) => {
-        this.setState({
-          peopleList
+      componentDidMount() {                         <--------
+        this.swapiService
+          .getAllPeople()
+          .then((peopleList) => {
+            this.setState({
+              peopleList
+            });
+          });
+      };                                            <--------
+
+      renderItem(arr) {                                   <--------
+        return arr.map(({id, name}) => {
+          return (
+            <li className="list-group-item"
+                key={id}
+                onClick={() => this.props.onItemSelected(id)}>
+              {name}
+            </li>
+          );
         });
-      });
-  };                                            <--------
+      };                                                    <--------
 
-  renderItem(arr) {                                   <--------
-    return arr.map(({id, name}) => {
-      return (
-        <li className="list-group-item"
-            key={id}
-            onClick={() => this.props.onItemSelected(id)}>
-          {name}
-        </li>
-      );
-    });
-  };                                                    <--------
+      render() {
 
-  render() {
+        const { peopleList } = this.state;                  <--------
 
-    const { peopleList } = this.state;                  <--------
+        if (!peopleList) {                                <--------
+          return <Spinner />                                <--------
+        };
 
-    if (!peopleList) {                                <--------
-      return <Spinner />                                <--------
+        const items = this.renderItem(peopleList);        <--------
+
+        return (
+          <ul className="item-list list-group">
+            {items}                                       <--------
+          </ul>
+        );
+      };
     };
 
-    const items = this.renderItem(peopleList);        <--------
+    <!-- app.js -->
+    import React, { Component } from 'react';
+    .............
 
-    return (
-      <ul className="item-list list-group">
-        {items}                                       <--------
-      </ul>
-    );
-  };
-};
+    import './app.css';
 
-<!-- app.js -->
-import React, { Component } from 'react';
-.............
+    export default class App extends Component {
 
-import './app.css';
-
-export default class App extends Component {
-
-  state = {
-    showRandomPlanet: true,
-    selectedPerson: null                          <--------
-  };
-
-  toggleRandomPlanet = () => {
-    this.setState((state) => {
-      return {
-        showRandomPlanet: !state.showRandomPlanet
+      state = {
+        showRandomPlanet: true,
+        selectedPerson: null                          <--------
       };
-    });
-  };
 
-  onPersonSelected = (id) => {                    <--------
-    this.setState({
-      selectedPerson: id
-    });
-  };                                              <--------
+      toggleRandomPlanet = () => {
+        this.setState((state) => {
+          return {
+            showRandomPlanet: !state.showRandomPlanet
+          };
+        });
+      };
 
-  render() {
+      onPersonSelected = (id) => {                    <--------
+        this.setState({
+          selectedPerson: id
+        });
+      };                                              <--------
 
-    const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
+      render() {
 
-    return (
-      <div className="stardb-app">
-        <Header />
-        { planet }
+        const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
 
-        <button 
-          className="toggle-planet btn btn-warning btn-1g"
-          onClick={this.toggleRandomPlanet}>
-          Toggle Random Planet
-        </button>
+        return (
+          <div className="stardb-app">
+            <Header />
+            { planet }
 
-        <div className="row mb2">
-          <div className="col-md-6">
-            <ItemList onItemSelected={this.onPersonSelected} />       <--------
+            <button 
+              className="toggle-planet btn btn-warning btn-1g"
+              onClick={this.toggleRandomPlanet}>
+              Toggle Random Planet
+            </button>
+
+            <div className="row mb2">
+              <div className="col-md-6">
+                <ItemList onItemSelected={this.onPersonSelected} />       <--------
+              </div>
+              <div className="col-md-6">
+                <PersonDetails personId={this.state.selectedPerson} />    <--------
+              </div>
+            </div>
           </div>
-          <div className="col-md-6">
-            <PersonDetails personId={this.state.selectedPerson} />    <--------
-          </div>
-        </div>
-      </div>
-    );
-  };  
-};
+        );
+      };  
+    };
 
 
 
@@ -1065,126 +1075,126 @@ export default class App extends Component {
   КАКОЕ ИМЕННО СВОЙСТВО ИЗМЕНИЛОСЬ
 -... иначе компонент рискует уйти в "вечный цикл" обновления
 
-<!-- person-details.js -->
-import React, { Component } from 'react';
+    <!-- person-details.js -->
+    import React, { Component } from 'react';
 
-import SwapiService from '../../services/swapi-service';
+    import SwapiService from '../../services/swapi-service';
 
-import './person-details.css';
-import Spinner from '../spinner/spinner';             <-добавлен Спинер->
-import ErrorIndicator from '../error-indicator'       <-Доб. отлов ошибок->
+    import './person-details.css';
+    import Spinner from '../spinner/spinner';             <-добавлен Спинер->
+    import ErrorIndicator from '../error-indicator'       <-Доб. отлов ошибок->
 
 
-export default class PersonDetails extends Component {
+    export default class PersonDetails extends Component {
 
-  swapiService = new SwapiService();              <---------
+      swapiService = new SwapiService();              <---------
 
-  state = {
-    person: null,
-    loading: true,                              <---------
-    error: false                                <---------
-  };
+      state = {
+        person: null,
+        loading: true,                              <---------
+        error: false                                <---------
+      };
 
-  componentDidMount() {                             <---------
-    this.updatePerson();                            <---------
-  };
+      componentDidMount() {                             <---------
+        this.updatePerson();                            <---------
+      };
 
-  componentDidUpdate(prevProps) {                       <---------
-    if (this.props.personId !== prevProps.personId) {   <-ОЧЕНЬ ВАЖНО->
-      this.setState({                                   <---------
-        loading: true                                   <---------
-      });
-      this.updatePerson();                              <---------
-    }
-  };
+      componentDidUpdate(prevProps) {                       <---------
+        if (this.props.personId !== prevProps.personId) {   <-ОЧЕНЬ ВАЖНО->
+          this.setState({                                   <---------
+            loading: true                                   <---------
+          });
+          this.updatePerson();                              <---------
+        }
+      };
 
-  onPersenLoaded = (person) => {                        <---------
-    this.setState({ 
-      person,                                               ...
-      loading: false 
-    });
-  };                                                    <---------
+      onPersenLoaded = (person) => {                        <---------
+        this.setState({ 
+          person,                                               ...
+          loading: false 
+        });
+      };                                                    <---------
 
-  onError = (err) => {                                  <---------
-    this.setState({
-      loading: false, 
-      error: true                                         ...
-    });
-  };                                                      <---------
+      onError = (err) => {                                  <---------
+        this.setState({
+          loading: false, 
+          error: true                                         ...
+        });
+      };                                                      <---------
 
-  updatePerson() {                                      <---------
-    const { personId } = this.props;                    <---------
+      updatePerson() {                                      <---------
+        const { personId } = this.props;                    <---------
 
-    if (!personId) {                                    <---------
-      return;                                           <---------
-    }
+        if (!personId) {                                    <---------
+          return;                                           <---------
+        }
 
-    this.swapiService                                   <---------
-      .getPerson(personId)
-      .then(this.onPersenLoaded)                        ...
-      .catch(this.onError)  
-  };                                                    <---------
+        this.swapiService                                   <---------
+          .getPerson(personId)
+          .then(this.onPersenLoaded)                        ...
+          .catch(this.onError)  
+      };                                                    <---------
 
-  render() {
+      render() {
 
-    if (!this.state.person) {                           <---------
-      return <Spinner />                              <---------
+        if (!this.state.person) {                           <---------
+          return <Spinner />                              <---------
+        };
+
+        //  if (!this.state.person) {
+        //   return <span>Select a person from a list</span>
+
+        const { person, loading, error } = this.state;        <---------
+
+        const hasError = !(loading || error);                   <---------
+
+        const errorMessage = error ? <ErrorIndicator /> : null;     <---------
+        const spinner = loading ? <Spinner /> : null;                       <---------
+        const content = hasError ? <PersonView person={person} /> : null;   <---------
+
+        return (                                              <---------
+          <div className="person-details card">
+            {errorMessage}                                
+            {spinner}                                           .....
+            {content}
+          </div>
+        )                                                       <---------
+      }
     };
 
-    //  if (!this.state.person) {
-    //   return <span>Select a person from a list</span>
+    const PersonView = ({ person }) => {
 
-    const { person, loading, error } = this.state;        <---------
+      const { id, name, gender,
+        birthYear, eyeColor } = person;                           <---------
 
-    const hasError = !(loading || error);                   <---------
+      return (
 
-    const errorMessage = error ? <ErrorIndicator /> : null;     <---------
-    const spinner = loading ? <Spinner /> : null;                       <---------
-    const content = hasError ? <PersonView person={person} /> : null;   <---------
+        <React.Fragment>                                            <---------
+          <img className="person-image"
+              src={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`}
+              alt="character"/>
 
-    return (                                              <---------
-      <div className="person-details card">
-        {errorMessage}                                
-        {spinner}                                           .....
-        {content}
-      </div>
-    )                                                       <---------
-  }
-};
+            <div className="card-body">
+              <h4>{name}</h4>
+              <ul className="list-group list-group-flush">
+                <li className="list-group-item">
+                  <span className="term">Gender</span>
+                  <span>{gender}</span>
+                </li>
+                <li className="list-group-item">
+                  <span className="term">Birth Year</span>
+                  <span>{birthYear}</span>
+                </li>
+                <li className="list-group-item">
+                  <span className="term">Eye Color</span>
+                  <span>{eyeColor}</span>
+                </li>
+              </ul>
+            </div>
+        </React.Fragment>                                             <---------
+      );
+    };
 
-const PersonView = ({ person }) => {
-
-  const { id, name, gender,
-    birthYear, eyeColor } = person;                           <---------
-
-  return (
-
-    <React.Fragment>                                            <---------
-      <img className="person-image"
-          src={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`}
-          alt="character"/>
-
-        <div className="card-body">
-          <h4>{name}</h4>
-          <ul className="list-group list-group-flush">
-            <li className="list-group-item">
-              <span className="term">Gender</span>
-              <span>{gender}</span>
-            </li>
-            <li className="list-group-item">
-              <span className="term">Birth Year</span>
-              <span>{birthYear}</span>
-            </li>
-            <li className="list-group-item">
-              <span className="term">Eye Color</span>
-              <span>{eyeColor}</span>
-            </li>
-          </ul>
-        </div>
-    </React.Fragment>                                             <---------
-  );
-};
-  
 
 
 ---componentWillUnmount
@@ -1224,71 +1234,71 @@ const PersonView = ({ person }) => {
 -НЕ обрабатываются ошибки в event listener'ах и в асинхронном коде
   (запросы к серверу и тд.)
 
-<!-- error-button.js -->
-import React, {Component} from 'react';                              <-------
-import './error-button.css';
+    <!-- error-button.js -->
+    import React, {Component} from 'react';                              <-------
+    import './error-button.css';
 
-export default class ErrorButton extends Component {
+    export default class ErrorButton extends Component {
 
-  state = {
-    renderError: false
-  };
+      state = {
+        renderError: false
+      };
 
-  render() {
+      render() {
 
-    console.log('render');                                  .........
-    if (this.state.renderError) {
-      this.foo.bar = 0;
+        console.log('render');                                  .........
+        if (this.state.renderError) {
+          this.foo.bar = 0;
+        };
+
+        return (
+          <button
+            className="error-button btn btn-danger btn-lg"
+            onClick={() => this.setState({renderError: true})}>
+              Throw Error
+          </button>
+        );
+
+      };
+    };                                                                    <-------
+
+    <!-- app.js -->
+    import React, { Component } from 'react';
+    ........
+
+    import ErrorButton from '../error-button';              <-------
+    import ErrorIndicator from '../error-indicator';
+
+    export default class App extends Component {
+
+      state = {
+        showRandomPlanet: true,
+        selectedPerson: 1,
+        hasError: false                                     <-------
+      };
+
+
+      componentDidCatch() {                                 <-------
+        console.log('componentDidCatch');
+        this.setState({                                 ......
+          hasError: true 
+        });
+      };                                                    <-------
+
+      render() {
+
+        if (this.state.hasError) {                          <-------
+          return <ErrorIndicator />
+        };                                                  <-------
+
+        const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
+
+        return (
+          <div className="stardb-app">
+          .......
+        );
+      };  
     };
-
-    return (
-      <button
-        className="error-button btn btn-danger btn-lg"
-        onClick={() => this.setState({renderError: true})}>
-          Throw Error
-      </button>
-    );
-
-  };
-};                                                                    <-------
-
-<!-- app.js -->
-import React, { Component } from 'react';
-........
-
-import ErrorButton from '../error-button';              <-------
-import ErrorIndicator from '../error-indicator';
-
-export default class App extends Component {
-
-  state = {
-    showRandomPlanet: true,
-    selectedPerson: 1,
-    hasError: false                                     <-------
-  };
-
- 
-  componentDidCatch() {                                 <-------
-    console.log('componentDidCatch');
-    this.setState({                                 ......
-      hasError: true 
-    });
-  };                                                    <-------
-
-  render() {
-
-    if (this.state.hasError) {                          <-------
-      return <ErrorIndicator />
-    };                                                  <-------
-
-    const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
-
-    return (
-      <div className="stardb-app">
-      .......
-    );
-  };  
-};
 
 
 
@@ -1300,160 +1310,160 @@ export default class App extends Component {
 -componentDidCatch()  принимает два аргумента - error и info с
   дополнительной информацией об источнике ошибок
 
-<!-- people-page.js -->
-import React, { Component } from 'react';
+    <!-- people-page.js -->
+    import React, { Component } from 'react';
 
-import './people-page.css';
+    import './people-page.css';
 
-import ItemList from '../item-list';
-import PersonDetails from '../person-details';
-import ErrorIndicator from '../error-indicator';
-import ErrorButton from '../error-button';
+    import ItemList from '../item-list';
+    import PersonDetails from '../person-details';
+    import ErrorIndicator from '../error-indicator';
+    import ErrorButton from '../error-button';
 
-export default class PeoplePage extends Component {
+    export default class PeoplePage extends Component {
 
-  state = {
-    selectedPerson: 3,
-    hasError: false
-  };
-
-  componentDidCatch(error, info) {
-    debugger;
-
-    this.setState({
-      hasError: true
-    });
-  };
-
-  onPersonSelected = (selectedPerson) => {
-    this.setState({
-      selectedPerson,
-    });
-  };
-
-  render() {
-
-    if (this.state.hasError) {
-      return <ErrorIndicator />
-    };
-
-    return (
-      <div className="row mb2">
-        <div className="col-md-6">
-          <ItemList onItemSelected={this.onPersonSelected} />
-        </div>
-      
-      <div className="col-md-6">
-        <PersonDetails personId={this.state.selectedPerson} />
-      </div>
-    </div>
-    )
-  };
-};
-
-<!-- app.js -->
-import React, { Component } from 'react';
-
-import Header from '../header';
-import RandomPlanet from '../random-planet';
-
-import './app.css';
-
-import ErrorButton from '../error-button';
-import ErrorIndicator from '../error-indicator';
-import PeoplePage from '../people-page/people-page';
-
-export default class App extends Component {
-
-  state = {
-    showRandomPlanet: true,
-    hasError: false
-  };                  <-selectedPerson -перенесено в people-page->
-
-  toggleRandomPlanet = () => {
-    this.setState((state) => {
-      return {
-        showRandomPlanet: !state.showRandomPlanet
+      state = {
+        selectedPerson: 3,
+        hasError: false
       };
-    });
-  };
 
-  componentDidCatch() {
-    console.log('componentDidCatch');
-    this.setState({
-      hasError: true 
-    });
-  };
+      componentDidCatch(error, info) {
+        debugger;
 
-  render() {
+        this.setState({
+          hasError: true
+        });
+      };
 
-    if (this.state.hasError) {
-      return <ErrorIndicator />
+      onPersonSelected = (selectedPerson) => {
+        this.setState({
+          selectedPerson,
+        });
+      };
+
+      render() {
+
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
+
+        return (
+          <div className="row mb2">
+            <div className="col-md-6">
+              <ItemList onItemSelected={this.onPersonSelected} />
+            </div>
+
+          <div className="col-md-6">
+            <PersonDetails personId={this.state.selectedPerson} />
+          </div>
+        </div>
+        )
+      };
     };
 
-    const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
+    <!-- app.js -->
+    import React, { Component } from 'react';
 
-    return (
-      <div className="stardb-app">
-        <Header />
-        { planet }
+    import Header from '../header';
+    import RandomPlanet from '../random-planet';
 
-        <div className="mb2 button-row">
-          <button 
-            className="toggle-planet btn btn-warning btn-lg"
-            onClick={this.toggleRandomPlanet}>
-              Toggle Random Planet
-          </button>
-          <ErrorButton />
-        </div>
-                        <-Данные перенесены в people-page.js->
-        <PeoplePage />                            <------
-        <PeoplePage />                            <------
+    import './app.css';
 
-      </div>
-    );
-  };  
-};
+    import ErrorButton from '../error-button';
+    import ErrorIndicator from '../error-indicator';
+    import PeoplePage from '../people-page/people-page';
 
-<!-- person-details.js -->
-import React, { Component } from 'react';
-.........
-export default class PersonDetails extends Component {
-.............
+    export default class App extends Component {
 
-const PersonView = ({ person }) => {
+      state = {
+        showRandomPlanet: true,
+        hasError: false
+      };                  <-selectedPerson -перенесено в people-page->
 
-  const { id, name, gender,
-    birthYear, eyeColor } = person;                           
+      toggleRandomPlanet = () => {
+        this.setState((state) => {
+          return {
+            showRandomPlanet: !state.showRandomPlanet
+          };
+        });
+      };
 
-  return (
+      componentDidCatch() {
+        console.log('componentDidCatch');
+        this.setState({
+          hasError: true 
+        });
+      };
 
-    <React.Fragment>                                            
-      <img className="person-image"
-          src={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`}
-          alt="character"/>
+      render() {
 
-        <div className="card-body">
-          <h4>{name}</h4>
-          <ul className="list-group list-group-flush">
-            <li className="list-group-item">
-              <span className="term">Gender</span>
-              <span>{gender}</span>
-            </li>
-            <li className="list-group-item">
-              <span className="term">Birth Year</span>
-              <span>{birthYear}</span>
-            </li>
-            <li className="list-group-item">
-              <span className="term">Eye Color</span>
-              <span>{eyeColor}</span>
-            </li>
-          </ul>
-          <ErrorButton />                             <----------
-        </div>
-    </React.Fragment>                                        
-  );
-};
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
+
+        const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
+
+        return (
+          <div className="stardb-app">
+            <Header />
+            { planet }
+
+            <div className="mb2 button-row">
+              <button 
+                className="toggle-planet btn btn-warning btn-lg"
+                onClick={this.toggleRandomPlanet}>
+                  Toggle Random Planet
+              </button>
+              <ErrorButton />
+            </div>
+                            <-Данные перенесены в people-page.js->
+            <PeoplePage />                            <------
+            <PeoplePage />                            <------
+
+          </div>
+        );
+      };  
+    };
+
+    <!-- person-details.js -->
+    import React, { Component } from 'react';
+    .........
+    export default class PersonDetails extends Component {
+    .............
+
+    const PersonView = ({ person }) => {
+
+      const { id, name, gender,
+        birthYear, eyeColor } = person;                           
+
+      return (
+
+        <React.Fragment>                                            
+          <img className="person-image"
+              src={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`}
+              alt="character"/>
+
+            <div className="card-body">
+              <h4>{name}</h4>
+              <ul className="list-group list-group-flush">
+                <li className="list-group-item">
+                  <span className="term">Gender</span>
+                  <span>{gender}</span>
+                </li>
+                <li className="list-group-item">
+                  <span className="term">Birth Year</span>
+                  <span>{birthYear}</span>
+                </li>
+                <li className="list-group-item">
+                  <span className="term">Eye Color</span>
+                  <span>{eyeColor}</span>
+                </li>
+              </ul>
+              <ErrorButton />                             <----------
+            </div>
+        </React.Fragment>                                        
+      );
+    };
 
 
 
@@ -1465,124 +1475,124 @@ const PersonView = ({ person }) => {
 -Функция к примеру, может инкапсулировать получение данных (тогда компонент
   становится независимым от источника данных)
 
- <!--item-list.js  -->
-import React, { Component } from 'react';
-......
+     <!--item-list.js  -->
+    import React, { Component } from 'react';
+    ......
 
-export default class ItemList extends Component {
-                                                  <-Убран SwapiService->
-  state = {
-    itemList: null
-  };
+    export default class ItemList extends Component {
+                                                      <-Убран SwapiService->
+      state = {
+        itemList: null
+      };
 
-  componentDidMount() {
+      componentDidMount() {
 
-    const { getData } = this.props;           <-----------
+        const { getData } = this.props;           <-----------
 
-    getData()                                 <-----------
-      .then((itemList) => {                   <-----------
-        this.setState({
-          itemList                            <-----------
+        getData()                                 <-----------
+          .then((itemList) => {                   <-----------
+            this.setState({
+              itemList                            <-----------
+            });
         });
-    });
-  };
+      };
 
-  renderItem(arr) {
-    return arr.map(({id, name}) => {
-      return (
-        <li className="list-group-item"
-            key={id}
-            onClick={() => this.props.onItemSelected(id)}>
-          {name}
-        </li>
-      );
-    });
-  };
+      renderItem(arr) {
+        return arr.map(({id, name}) => {
+          return (
+            <li className="list-group-item"
+                key={id}
+                onClick={() => this.props.onItemSelected(id)}>
+              {name}
+            </li>
+          );
+        });
+      };
 
-  render() {
-    
-    const { itemList } = this.state;              <-----------
+      render() {
 
-    if (!itemList) {                              <-----------
-      return <Spinner />
+        const { itemList } = this.state;              <-----------
+
+        if (!itemList) {                              <-----------
+          return <Spinner />
+        };
+
+        const items = this.renderItem(itemList);
+
+        return (
+          <ul className="item-list list-group">
+            {items}
+          </ul>
+        );
+      };
     };
 
-    const items = this.renderItem(itemList);
+    <!-- people-page.js -->
+    import React, { Component } from 'react';
 
-    return (
-      <ul className="item-list list-group">
-        {items}
-      </ul>
-    );
-  };
-};
+    ......
 
-<!-- people-page.js -->
-import React, { Component } from 'react';
+    export default class PeoplePage extends Component {
 
-......
+      swapiService = new SwapiService();
 
-export default class PeoplePage extends Component {
+      state = {
+     ........
 
-  swapiService = new SwapiService();
+      render() {
 
-  state = {
- ........
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
 
-  render() {
+        return (
+          <div className="row mb2">
+            <div className="col-md-6">
+              <ItemList 
+                onItemSelected={this.onPersonSelected}
+                getData={this.swapiService.getAllPeople} />     <--------
+            </div>
 
-    if (this.state.hasError) {
-      return <ErrorIndicator />
+            <div className="col-md-6">
+              <PersonDetails personId={this.state.selectedPerson} />
+            </div>
+          </div>
+        )
+      };
     };
 
-    return (
-      <div className="row mb2">
-        <div className="col-md-6">
-          <ItemList 
-            onItemSelected={this.onPersonSelected}
-            getData={this.swapiService.getAllPeople} />     <--------
-        </div>
-      
-        <div className="col-md-6">
-          <PersonDetails personId={this.state.selectedPerson} />
-        </div>
-      </div>
-    )
-  };
-};
+    <!-- app.js -->
+    render() {
 
-<!-- app.js -->
-render() {
+     ......
+            <PeoplePage />
 
- ......
-        <PeoplePage />
+            <div className="row mb2">
+              <div className="col-md-6">
+                <ItemList 
+                  onItemSelected={this.onPersonSelected}
+                  getData={this.swapiService.getAllPlanets} />        <----------
+              </div>
+              <div className="col-md-6">
+                <PersonDetails personId={this.state.selectedPerson} />
+              </div>
+            </div>
 
-        <div className="row mb2">
-          <div className="col-md-6">
-            <ItemList 
-              onItemSelected={this.onPersonSelected}
-              getData={this.swapiService.getAllPlanets} />        <----------
+            <div className="row mb2">
+              <div className="col-md-6">
+                <ItemList 
+                  onItemSelected={this.onPersonSelected}
+                  getData={this.swapiService.getAllStarships} />        <----------
+              </div>
+              <div className="col-md-6">
+                <PersonDetails personId={this.state.selectedPerson} />
+              </div>
+            </div>
+
           </div>
-          <div className="col-md-6">
-            <PersonDetails personId={this.state.selectedPerson} />
-          </div>
-        </div>
-
-        <div className="row mb2">
-          <div className="col-md-6">
-            <ItemList 
-              onItemSelected={this.onPersonSelected}
-              getData={this.swapiService.getAllStarships} />        <----------
-          </div>
-          <div className="col-md-6">
-            <PersonDetails personId={this.state.selectedPerson} />
-          </div>
-        </div>
-
-      </div>
-    );
-  };  
-};
+        );
+      };  
+    };
 
 <!-- swapi-service.js -->
 Все функции установлены как стрелочные () => {} что бы не терялся this
@@ -1598,131 +1608,131 @@ render() {
 
 -Такая функция обычно возвращает строку или React элементов
 
-<!-- app.js -->
-import React, { Component } from 'react';
-........
+    <!-- app.js -->
+    import React, { Component } from 'react';
+    ........
 
-export default class App extends Component {
+    export default class App extends Component {
 
-  .......
+      .......
 
-  render() {
+      render() {
 
-    if (this.state.hasError) {
-      return <ErrorIndicator />
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
+
+        const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
+
+        return (
+          .........
+
+            <PeoplePage />
+
+            <div className="row mb2">
+              <div className="col-md-6">
+                <ItemList 
+                  onItemSelected={this.onPersonSelected}
+                  getData={this.swapiService.getAllPlanets}
+                  renderItem={(item) =>                            <-------
+                    <span>{item.name} <button>!</button></span>     <-------
+                  } />
+              </div>
+              <div className="col-md-6">
+                <PersonDetails personId={this.state.selectedPerson} />
+              </div>
+            </div>
+
+            <div className="row mb2">
+              <div className="col-md-6">
+                <ItemList 
+                  onItemSelected={this.onPersonSelected}
+                  getData={this.swapiService.getAllStarships}
+                  renderItem={(item) => item.name} />               <-------
+              </div>
+              <div className="col-md-6">
+                <PersonDetails personId={this.state.selectedPerson} />
+              </div>
+            </div>
+
+          </div>
+        );
+      };  
     };
 
-    const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
+    <!-- people-page.js -->
+    import React, { Component } from 'react';
+    .....
 
-    return (
+    export default class PeoplePage extends Component {
+
       .........
 
-        <PeoplePage />
+      render() {
 
-        <div className="row mb2">
-          <div className="col-md-6">
-            <ItemList 
-              onItemSelected={this.onPersonSelected}
-              getData={this.swapiService.getAllPlanets}
-              renderItem={(item) =>                            <-------
-                <span>{item.name} <button>!</button></span>     <-------
-              } />
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
+
+        return (
+          <div className="row mb2">
+            <div className="col-md-6">
+              <ItemList 
+                onItemSelected={this.onPersonSelected}
+                getData={this.swapiService.getAllPeople}
+                renderItem={({name,gender,birthYear}) =>        <-------
+                  `${name} (${gender}, ${birthYear})`} />       <-------
+            </div>
+
+            <div className="col-md-6">
+              <PersonDetails personId={this.state.selectedPerson} />
+            </div>
           </div>
-          <div className="col-md-6">
-            <PersonDetails personId={this.state.selectedPerson} />
-          </div>
-        </div>
-
-        <div className="row mb2">
-          <div className="col-md-6">
-            <ItemList 
-              onItemSelected={this.onPersonSelected}
-              getData={this.swapiService.getAllStarships}
-              renderItem={(item) => item.name} />               <-------
-          </div>
-          <div className="col-md-6">
-            <PersonDetails personId={this.state.selectedPerson} />
-          </div>
-        </div>
-
-      </div>
-    );
-  };  
-};
-
-<!-- people-page.js -->
-import React, { Component } from 'react';
-.....
-
-export default class PeoplePage extends Component {
-
-  .........
-
-  render() {
-
-    if (this.state.hasError) {
-      return <ErrorIndicator />
+        )
+      };
     };
 
-    return (
-      <div className="row mb2">
-        <div className="col-md-6">
-          <ItemList 
-            onItemSelected={this.onPersonSelected}
-            getData={this.swapiService.getAllPeople}
-            renderItem={({name,gender,birthYear}) =>        <-------
-              `${name} (${gender}, ${birthYear})`} />       <-------
-        </div>
-      
-        <div className="col-md-6">
-          <PersonDetails personId={this.state.selectedPerson} />
-        </div>
-      </div>
-    )
-  };
-};
+    <!-- item-list.js -->
+    import React, { Component } from 'react';
+    ......
 
-<!-- item-list.js -->
-import React, { Component } from 'react';
-......
+    export default class ItemList extends Component {
 
-export default class ItemList extends Component {
+    .......
 
-.......
+      renderItem(arr) {                                         <--------
+        return arr.map((item) => {
+          const { id } = item;                                  <--------
 
-  renderItem(arr) {                                         <--------
-    return arr.map((item) => {
-      const { id } = item;                                  <--------
+          const lable = this.props.renderItem(item);            <--------
 
-      const lable = this.props.renderItem(item);            <--------
+          return (                                              
+            <li className="list-group-item"
+                key={id}
+                onClick={() => this.props.onItemSelected(id)}>
+              {lable}                                           <--------
+            </li>
+          );
+        });
+      };                                                          
 
-      return (                                              
-        <li className="list-group-item"
-            key={id}
-            onClick={() => this.props.onItemSelected(id)}>
-          {lable}                                           <--------
-        </li>
-      );
-    });
-  };                                                          
+      render() {
 
-  render() {
-    
-    const { itemList } = this.state;
+        const { itemList } = this.state;
 
-    if (!itemList) {
-      return <Spinner />
+        if (!itemList) {
+          return <Spinner />
+        };
+
+        const items = this.renderItem(itemList);
+
+        return (
+          <ul className="item-list list-group">
+            {items}
+          </ul>
+        );
+      };
     };
-
-    const items = this.renderItem(itemList);
-
-    return (
-      <ul className="item-list list-group">
-        {items}
-      </ul>
-    );
-  };
-};
 
 
 ---Свойства-элементы
@@ -1736,56 +1746,56 @@ export default class ItemList extends Component {
 -...или элементы, которые умеют выбирать, что рендерить в зависимости
   от условия (загрузка, ошибка и тд.)
 
-<!-- row.js -->
-import React, { Component } from 'react';
+    <!-- row.js -->
+    import React, { Component } from 'react';
 
-.......
+    .......
 
-const Row = ({left, right}) => {                    <-------
-  return (
-    <div className="row mb2">
-        <div className="col-md-6">
-          {left}                      <-------
-        </div>                                      .......
-        <div className="col-md-6">
-          {right}                     <-------
-        </div>
-      </div>
-  )
-};                                                  <-------
+    const Row = ({left, right}) => {                    <-------
+      return (
+        <div className="row mb2">
+            <div className="col-md-6">
+              {left}                      <-------
+            </div>                                      .......
+            <div className="col-md-6">
+              {right}                     <-------
+            </div>
+          </div>
+      )
+    };                                                  <-------
 
-<!-- people-page.js -->
-export default class PeoplePage extends Component {
+    <!-- people-page.js -->
+    export default class PeoplePage extends Component {
 
- ........
+     ........
 
-  render() {
+      render() {
 
-    if (this.state.hasError) {
-      return <ErrorIndicator />
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
+
+        const itemList = (                              <-Отдельная константа->
+          <ItemList 
+            onItemSelected={this.onPersonSelected}
+            getData={this.swapiService.getAllPeople}        .......
+            renderItem={({name, gender, birthYear}) => 
+              `${name} (${gender}, ${birthYear})`} />
+        );                                                <--------
+
+        const personDetails = (                                   <-Отдельная константа->
+          <PersonDetails personId={this.state.selectedPerson} />  <-------
+        );
+
+        return (
+          <div>
+            <Row left={itemList} right={personDetails} />       <-------
+            <Row left='left_leg' right='right_leg' />           <-Пример->
+            <Row left={<p>Hello</p>} right={<span>Duo</span>}/>   <-Пример->
+          </div>
+        );
+      };
     };
-
-    const itemList = (                              <-Отдельная константа->
-      <ItemList 
-        onItemSelected={this.onPersonSelected}
-        getData={this.swapiService.getAllPeople}        .......
-        renderItem={({name, gender, birthYear}) => 
-          `${name} (${gender}, ${birthYear})`} />
-    );                                                <--------
-
-    const personDetails = (                                   <-Отдельная константа->
-      <PersonDetails personId={this.state.selectedPerson} />  <-------
-    );
-
-    return (
-      <div>
-        <Row left={itemList} right={personDetails} />       <-------
-        <Row left='left_leg' right='right_leg' />           <-Пример->
-        <Row left={<p>Hello</p>} right={<span>Duo</span>}/>   <-Пример->
-      </div>
-    );
-  };
-};
 
 
 
@@ -1799,183 +1809,183 @@ export default class PeoplePage extends Component {
 
 -Поддерживает любые типы данных: элементы, функции, объекты и др.
 
-<!-- people-page.js -->
-import React, { Component } from 'react';
+    <!-- people-page.js -->
+    import React, { Component } from 'react';
 
-.......
+    .......
 
-export default class PeoplePage extends Component {
+    export default class PeoplePage extends Component {
 
-  swapiService = new SwapiService();
+      swapiService = new SwapiService();
 
-  ..........
+      ..........
 
-  render() {
+      render() {
 
-    if (this.state.hasError) {
-      return <ErrorIndicator />
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
+
+        const itemList = (
+          <ItemList 
+            onItemSelected={this.onPersonSelected}
+            getData={this.swapiService.getAllPeople} >
+
+            {(i) => (                                      <-------
+              `${i.name}  (${i.birthYear})`
+            )}                                              <-------
+
+          </ItemList>
+        );
+
+        const personDetails = (
+          <PersonDetails personId={this.state.selectedPerson} />
+        );
+
+        return (
+          <ErrorBoundry>
+            <Row left={itemList} right={personDetails} />
+          </ErrorBoundry>
+        );
+      };
     };
 
-    const itemList = (
-      <ItemList 
-        onItemSelected={this.onPersonSelected}
-        getData={this.swapiService.getAllPeople} >
-          
-        {(i) => (                                      <-------
-          `${i.name}  (${i.birthYear})`
-        )}                                              <-------
-        
-      </ItemList>
-    );
+    <!-- item-list.js -->
+    import React, { Component } from 'react';
+    ............
 
-    const personDetails = (
-      <PersonDetails personId={this.state.selectedPerson} />
-    );
+    export default class ItemList extends Component {
 
-    return (
-      <ErrorBoundry>
-        <Row left={itemList} right={personDetails} />
-      </ErrorBoundry>
-    );
-  };
-};
+      state = {
+        itemList: null
+      };
 
-<!-- item-list.js -->
-import React, { Component } from 'react';
-............
+      componentDidMount() {
+        const { getData } = this.props;
 
-export default class ItemList extends Component {
-
-  state = {
-    itemList: null
-  };
-
-  componentDidMount() {
-    const { getData } = this.props;
-
-    getData()
-      .then((itemList) => {
-        this.setState({
-          itemList
+        getData()
+          .then((itemList) => {
+            this.setState({
+              itemList
+            });
         });
-    });
-  };
+      };
 
-  renderItem(arr) {
-    return arr.map((item) => {
-      const { id } = item;
+      renderItem(arr) {
+        return arr.map((item) => {
+          const { id } = item;
 
-      const label = this.props.children(item);        <-children->
+          const label = this.props.children(item);        <-children->
 
-      return (
-        <li className="list-group-item"
-            key={id}
-            onClick={() => this.props.onItemSelected(id)}>
-          {label}
-        </li>
-      );
-    });
-  };
+          return (
+            <li className="list-group-item"
+                key={id}
+                onClick={() => this.props.onItemSelected(id)}>
+              {label}
+            </li>
+          );
+        });
+      };
 
-  render() {
-    
-    const { itemList } = this.state;
+      render() {
 
-    if (!itemList) {
-      return <Spinner />
+        const { itemList } = this.state;
+
+        if (!itemList) {
+          return <Spinner />
+        };
+
+        const items = this.renderItem(itemList);
+
+        return (
+          <ul className="item-list list-group">
+            {items}
+          </ul>
+        );
+      };
     };
 
-    const items = this.renderItem(itemList);
+    <!-- error-boundry.js -->
+    import React, { Component } from 'react';               <---------
 
-    return (
-      <ul className="item-list list-group">
-        {items}
-      </ul>
-    );
-  };
-};
+    import './error-boundry.css';
 
-<!-- error-boundry.js -->
-import React, { Component } from 'react';               <---------
+    import ErrorIndicator from '../error-indicator';
 
-import './error-boundry.css';
+    export default class ErrorBoundry extends Component {
 
-import ErrorIndicator from '../error-indicator';
+      state = {
+        hasError: false
+      };
 
-export default class ErrorBoundry extends Component {
+      componentDidCatch(error, info) {                ..........
+        debugger;
 
-  state = {
-    hasError: false
-  };
+        this.setState({
+          hasError: true
+        });
+      };
 
-  componentDidCatch(error, info) {                ..........
-    debugger;
+      render() {                                        ..........
 
-    this.setState({
-      hasError: true
-    });
-  };
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        }
 
-  render() {                                        ..........
+        return this.props.children;
+      }
+    };                                                  <---------
 
-    if (this.state.hasError) {
-      return <ErrorIndicator />
-    }
-    
-    return this.props.children;
-  }
-};                                                  <---------
+    <!-- app.js -->
+    import React, { Component } from 'react';
+    ..........
 
-<!-- app.js -->
-import React, { Component } from 'react';
-..........
+    export default class App extends Component {
 
-export default class App extends Component {
+    ..........
 
-..........
+      render() {
 
-  render() {
+       ...........
 
-   ...........
+            { planet }
 
-        { planet }
+            <PeoplePage />
 
-        <PeoplePage />
+            <div className="row mb2">
+              <div className="col-md-6">
+                <ItemList 
+                  onItemSelected={this.onPersonSelected}
+                  getData={this.swapiService.getAllPlanets} >
 
-        <div className="row mb2">
-          <div className="col-md-6">
-            <ItemList 
-              onItemSelected={this.onPersonSelected}
-              getData={this.swapiService.getAllPlanets} >
+                  {(i) => (
+                    `${i.name}  (${i.birthYear})`                 <---------
+                  )}
 
-              {(i) => (
-                `${i.name}  (${i.birthYear})`                 <---------
-              )}
+                </ItemList>
+              </div>
+              <div className="col-md-6">
+                <PersonDetails personId={this.state.selectedPerson} />
+              </div>
+            </div>
 
-            </ItemList>
+            <div className="row mb2">
+              <div className="col-md-6">
+                <ItemList 
+                  onItemSelected={this.onPersonSelected}
+                  getData={this.swapiService.getAllStarships} >
+
+                  {(i) => (
+                    `${i.name}  (${i.birthYear})`                   <---------
+                  )}
+
+                </ItemList>
+             ................
+
           </div>
-          <div className="col-md-6">
-            <PersonDetails personId={this.state.selectedPerson} />
-          </div>
-        </div>
-
-        <div className="row mb2">
-          <div className="col-md-6">
-            <ItemList 
-              onItemSelected={this.onPersonSelected}
-              getData={this.swapiService.getAllStarships} >
-
-              {(i) => (
-                `${i.name}  (${i.birthYear})`                   <---------
-              )}
-
-            </ItemList>
-         ................
-
-      </div>
-    );
-  };  
-};
+        );
+      };  
+    };
 
 
 
@@ -1990,308 +2000,308 @@ export default class App extends Component {
   будет отображать компонент 
 
 
-<!-- swapi-service.js -->
-export default class SwapiService {
-  // Через нижнее подчеркивание говорим другим разработчикам что это
-  // приватная часть класса и ее не следует использовать или изменять снаруже   
-  _apiBase = 'https://swapi.co/api';
-  _imageBase = 'https://starwars-visualguide.com/assets/img';  <-----
+    <!-- swapi-service.js -->
+    export default class SwapiService {
+      // Через нижнее подчеркивание говорим другим разработчикам что это
+      // приватная часть класса и ее не следует использовать или изменять снаруже   
+      _apiBase = 'https://swapi.co/api';
+      _imageBase = 'https://starwars-visualguide.com/assets/img';  <-----
 
-  getResource = async (url) => {
-    const res = await fetch(`${this._apiBase}${url}`);
+      getResource = async (url) => {
+        const res = await fetch(`${this._apiBase}${url}`);
 
-    if (!res.ok) {
-      throw new Error(`Could not fetch ${url}` + 
-        `, received ${res.status}`);
-    };
+        if (!res.ok) {
+          throw new Error(`Could not fetch ${url}` + 
+            `, received ${res.status}`);
+        };
 
-    return res.json();
-  };
-
-  getAllPeople = async () => {
-    const res = await this.getResource(`/people/`);
-    return res.results
-      .map(this._transformItem)
-      .slice(0, 5);
-  };
-
-  getPerson = async (id) => {
-    const item = await this.getResource(`/people/${id}/`);
-    return this._transformItem(item);
-  };
-
-  getAllPlanets = async () => {
-    const res = await this.getResource(`/planets/`);
-    return res.results
-      .map(this._transformPlanet)
-      .slice(0, 5);  
-  }; /*Передаём уже изменённую коллекцию*/
-
-  getPlanet = async(id) => {
-    const planet = await this.getResource(`/planets/${id}/`);
-    return this._transformPlanet(planet);
-  };
-
-  getAllStarships = async () => {
-    const res = await this.getResource(`/starships/`);
-    return res.results
-      .map(this._transformStarship)
-      .slice(0, 5);
-  };
-
-  getStarship = async (id) => {
-    const starship = await this.getResource(`/starships/${id}/`);
-    return this._transformStarship(starship);
-  };
-
-  getPersonImage = ({id}) => {                            <-----
-    return `${this._imageBase}/characters/${id}.jpg`  
-  };                                                      <-----
-
-  getStarshipImage = ({id}) => {                          <-----
-    return `${this._imageBase}/starships/${id}.jpg`
-  };                                                      <-----
-
-  getPlanetImage = ({id}) => {                            <-----
-    return `${this._imageBase}/planets/${id}.jpg`
-  };                                                      <-----
-
-  // doesImageExist = async id => {
-  //   const data = await fetch(`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`);
-  //   if (!data.ok) {
-  //     return "https://www.pnglot.com/pngfile/detail/12-120147_venus-planet-pics-about-space-transparent-image-clipart.png";
-  //   }
-  //   const imgURL = data.url;
-  //   return imgURL;
-  // };
-
-  _extractId = (item) => {
-    // const idRegExp = /\/([0-9]*)\/$/;
-    const idRegExp = /\/(\d+)*\/$/;
-    return item.url.match(idRegExp)[1];
-  };
-
-  _transformPlanet = (planet) => {
-    return {
-      id: this._extractId(planet),
-      name: planet.name,
-      population: planet.population,
-      rotationPeriod: planet.rotation_period,
-      diameter: planet.diameter
-    };
-  };
-
-  _transformStarship = (starship) => {
-    return {
-      id: this._extractId(starship),
-      name: starship.name,
-      model: starship.model,
-      manufacturer: starship.manufacturer,
-      costInCredits: starship.costInCredits,
-      length: starship.length,
-      crew: starship.crew,
-      passengers: starship.passengers,
-      cargoCapacity: starship.cargoCapacity
-    };
-  };
-
-  _transformItem = (item) => {
-    return {
-      id: this._extractId(item),
-      name: item.name,
-      gender: item.gender,
-      birthYear: item.birth_year,
-      eyeColor: item.eye_color
-    };
-  };
-};
-
-<!-- app.js -->
-import React, { Component } from 'react';
-
-............
-
-export default class App extends Component {
-
-  swapiService = new SwapiService();
-
-  state = {
-    showRandomPlanet: true,
-    hasError: false
-  };
-
-  toggleRandomPlanet = () => {
-    this.setState((state) => {
-      return {
-        showRandomPlanet: !state.showRandomPlanet
+        return res.json();
       };
-    });
-  };
 
-  componentDidCatch() {
-    console.log('componentDidCatch');
-    this.setState({
-      hasError: true 
-    });
-  };
+      getAllPeople = async () => {
+        const res = await this.getResource(`/people/`);
+        return res.results
+          .map(this._transformItem)
+          .slice(0, 5);
+      };
 
-  render() {
+      getPerson = async (id) => {
+        const item = await this.getResource(`/people/${id}/`);
+        return this._transformItem(item);
+      };
 
-    if (this.state.hasError) {
-      return <ErrorIndicator />
+      getAllPlanets = async () => {
+        const res = await this.getResource(`/planets/`);
+        return res.results
+          .map(this._transformPlanet)
+          .slice(0, 5);  
+      }; /*Передаём уже изменённую коллекцию*/
+
+      getPlanet = async(id) => {
+        const planet = await this.getResource(`/planets/${id}/`);
+        return this._transformPlanet(planet);
+      };
+
+      getAllStarships = async () => {
+        const res = await this.getResource(`/starships/`);
+        return res.results
+          .map(this._transformStarship)
+          .slice(0, 5);
+      };
+
+      getStarship = async (id) => {
+        const starship = await this.getResource(`/starships/${id}/`);
+        return this._transformStarship(starship);
+      };
+
+      getPersonImage = ({id}) => {                            <-----
+        return `${this._imageBase}/characters/${id}.jpg`  
+      };                                                      <-----
+
+      getStarshipImage = ({id}) => {                          <-----
+        return `${this._imageBase}/starships/${id}.jpg`
+      };                                                      <-----
+
+      getPlanetImage = ({id}) => {                            <-----
+        return `${this._imageBase}/planets/${id}.jpg`
+      };                                                      <-----
+
+      // doesImageExist = async id => {
+      //   const data = await fetch(`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`);
+      //   if (!data.ok) {
+      //     return "https://www.pnglot.com/pngfile/detail/12-120147_venus-planet-pics-about-space-transparent-image-clipart.png";
+      //   }
+      //   const imgURL = data.url;
+      //   return imgURL;
+      // };
+
+      _extractId = (item) => {
+        // const idRegExp = /\/([0-9]*)\/$/;
+        const idRegExp = /\/(\d+)*\/$/;
+        return item.url.match(idRegExp)[1];
+      };
+
+      _transformPlanet = (planet) => {
+        return {
+          id: this._extractId(planet),
+          name: planet.name,
+          population: planet.population,
+          rotationPeriod: planet.rotation_period,
+          diameter: planet.diameter
+        };
+      };
+
+      _transformStarship = (starship) => {
+        return {
+          id: this._extractId(starship),
+          name: starship.name,
+          model: starship.model,
+          manufacturer: starship.manufacturer,
+          costInCredits: starship.costInCredits,
+          length: starship.length,
+          crew: starship.crew,
+          passengers: starship.passengers,
+          cargoCapacity: starship.cargoCapacity
+        };
+      };
+
+      _transformItem = (item) => {
+        return {
+          id: this._extractId(item),
+          name: item.name,
+          gender: item.gender,
+          birthYear: item.birth_year,
+          eyeColor: item.eye_color
+        };
+      };
     };
 
-    const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
+    <!-- app.js -->
+    import React, { Component } from 'react';
 
-    const { getPerson, getStarship, 
-            getPersonImage, getStarshipImage } = this.swapiService;   <-----
+    ............
 
-    const personDetails = (                         <-----
-      <ItemDetails 
-        itemId={11}                                 .......
-        getData={getPerson}
-        getImageUrl={getPersonImage} />
-    );                                              <-----
+    export default class App extends Component {
 
-    const starshipDetails = (                       <-----
-      <ItemDetails 
-        itemId={5}
-        getData={getStarship}                       ......
-        getImageUrl={getStarshipImage} />
-    );                                              <-----
+      swapiService = new SwapiService();
 
-    return (
-      <div className="stardb-app">
-        <Header />
-        
-        
+      state = {
+        showRandomPlanet: true,
+        hasError: false
+      };
 
-        <Row                                        <-----
-          left={personDetails}                        <---------
-          right={starshipDetails} />                <-----
+      toggleRandomPlanet = () => {
+        this.setState((state) => {
+          return {
+            showRandomPlanet: !state.showRandomPlanet
+          };
+        });
+      };
 
-      </div>
-    );
-  };  
-};
+      componentDidCatch() {
+        console.log('componentDidCatch');
+        this.setState({
+          hasError: true 
+        });
+      };
 
-<!-- item-details.js -->
-import React, { Component } from 'react';
+      render() {
 
-...........
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
 
-export default class ItemDetails extends Component {
+        const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
 
-  swapiService = new SwapiService();
+        const { getPerson, getStarship, 
+                getPersonImage, getStarshipImage } = this.swapiService;   <-----
 
-  state = {
-    item: null,
-    loading: true,
-    error: false,
-    image: null                                   <-------
-  };
+        const personDetails = (                         <-----
+          <ItemDetails 
+            itemId={11}                                 .......
+            getData={getPerson}
+            getImageUrl={getPersonImage} />
+        );                                              <-----
 
-  componentDidMount() {
-    this.updateItem();
-  };
+        const starshipDetails = (                       <-----
+          <ItemDetails 
+            itemId={5}
+            getData={getStarship}                       ......
+            getImageUrl={getStarshipImage} />
+        );                                              <-----
 
-  componentDidUpdate(prevProps) {
-    if (this.props.itemId !== prevProps.itemId) {
-      this.setState({
-        loading: true
-      });
-      this.updateItem();
-    }
-  };
-
-  onPersenLoaded = (item) => {
-    const { getImageUrl } = this.props;           <-------
-
-    this.setState({ 
-      item,
-      loading: false,
-      image: getImageUrl(item)                    <-------
-    });
-  };
-
-  onError = (err) => {
-    this.setState({
-      loading: false,
-      error: true
-    });
-  };
-
-  updateItem() {
-    const { itemId, getData } = this.props;
-
-    if (!itemId) {
-      return;
-    }
-
-    getData(itemId)                             <-------
-      .then(this.onPersenLoaded)
-      .catch(this.onError)
-  };
-
-  render() {
-
-    const { item, loading, error, image } = this.state;     <-------
-
-    const hasError = !(loading || error);
-
-    const errorMessage = error ? <ErrorIndicator /> : null;
-    const spinner = loading ? <Spinner /> : null;
-    
-    const content = hasError 
-          ? <PersonView 
-              item={item} 
-              image={image} />                      <-------
-          : null;
-
-    return (
-      <div className="item-details card">
-        {errorMessage}
-        {spinner}
-        {content}
-      </div>
-    )
-  }
-};
-
-const PersonView = ({ item, image }) => {           <-------
-
-  const { id, name, gender,
-    birthYear, eyeColor } = item;
+        return (
+          <div className="stardb-app">
+            <Header />
 
 
-  return (
-    
-    <React.Fragment>
-      <img className="item-image"
-          src={image}                                 <-------
-          alt="character"/>
 
-      <div className="card-body">
-        <h4>{name}</h4>
-        <ul className="list-group list-group-flush">
-          <li className="list-group-item">
-            <span className="term">Gender</span>
-            <span>{gender}</span>
-          </li>
-          <li className="list-group-item">
-            <span className="term">Birth Year</span>
-            <span>{birthYear}</span>
-          </li>
-          <li className="list-group-item">
-            <span className="term">Eye Color</span>
-            <span>{eyeColor}</span>
-          </li>
-        </ul>
-        <ErrorButton />
-      </div>
-    </React.Fragment>
-  );
-};
+            <Row                                        <-----
+              left={personDetails}                        <---------
+              right={starshipDetails} />                <-----
+
+          </div>
+        );
+      };  
+    };
+
+    <!-- item-details.js -->
+    import React, { Component } from 'react';
+
+    ...........
+
+    export default class ItemDetails extends Component {
+
+      swapiService = new SwapiService();
+
+      state = {
+        item: null,
+        loading: true,
+        error: false,
+        image: null                                   <-------
+      };
+
+      componentDidMount() {
+        this.updateItem();
+      };
+
+      componentDidUpdate(prevProps) {
+        if (this.props.itemId !== prevProps.itemId) {
+          this.setState({
+            loading: true
+          });
+          this.updateItem();
+        }
+      };
+
+      onPersenLoaded = (item) => {
+        const { getImageUrl } = this.props;           <-------
+
+        this.setState({ 
+          item,
+          loading: false,
+          image: getImageUrl(item)                    <-------
+        });
+      };
+
+      onError = (err) => {
+        this.setState({
+          loading: false,
+          error: true
+        });
+      };
+
+      updateItem() {
+        const { itemId, getData } = this.props;
+
+        if (!itemId) {
+          return;
+        }
+
+        getData(itemId)                             <-------
+          .then(this.onPersenLoaded)
+          .catch(this.onError)
+      };
+
+      render() {
+
+        const { item, loading, error, image } = this.state;     <-------
+
+        const hasError = !(loading || error);
+
+        const errorMessage = error ? <ErrorIndicator /> : null;
+        const spinner = loading ? <Spinner /> : null;
+
+        const content = hasError 
+              ? <PersonView 
+                  item={item} 
+                  image={image} />                      <-------
+              : null;
+
+        return (
+          <div className="item-details card">
+            {errorMessage}
+            {spinner}
+            {content}
+          </div>
+        )
+      }
+    };
+
+    const PersonView = ({ item, image }) => {           <-------
+
+      const { id, name, gender,
+        birthYear, eyeColor } = item;
+
+
+      return (
+
+        <React.Fragment>
+          <img className="item-image"
+              src={image}                                 <-------
+              alt="character"/>
+
+          <div className="card-body">
+            <h4>{name}</h4>
+            <ul className="list-group list-group-flush">
+              <li className="list-group-item">
+                <span className="term">Gender</span>
+                <span>{gender}</span>
+              </li>
+              <li className="list-group-item">
+                <span className="term">Birth Year</span>
+                <span>{birthYear}</span>
+              </li>
+              <li className="list-group-item">
+                <span className="term">Eye Color</span>
+                <span>{eyeColor}</span>
+              </li>
+            </ul>
+            <ErrorButton />
+          </div>
+        </React.Fragment>
+      );
+    };
 
 
 
@@ -2314,192 +2324,192 @@ const PersonView = ({ item, image }) => {           <-------
 
 -К примеру, элементам можно добавлять новые свойства
 
-<!-- app.js -->
-import React, { Component } from 'react';
+    <!-- app.js -->
+    import React, { Component } from 'react';
 
-import './app.css';
+    import './app.css';
 
-import Header from '../header';
-import RandomPlanet from '../random-planet';
-import ErrorIndicator from '../error-indicator';
+    import Header from '../header';
+    import RandomPlanet from '../random-planet';
+    import ErrorIndicator from '../error-indicator';
 
-import ItemDetails, { Record } from '../item-details';      <-Record->
-import SwapiService from '../../services/swapi-service';
-import Row from '../row';
+    import ItemDetails, { Record } from '../item-details';      <-Record->
+    import SwapiService from '../../services/swapi-service';
+    import Row from '../row';
 
-export default class App extends Component {
+    export default class App extends Component {
 
-  .........
+      .........
 
-  render() {
+      render() {
 
-    if (this.state.hasError) {
-      return <ErrorIndicator />
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
+
+        const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
+
+        const { getPerson, getStarship, 
+                getPersonImage, getStarshipImage } = this.swapiService;
+
+        const personDetails = (
+          <ItemDetails 
+            itemId={11}
+            getData={getPerson}
+            getImageUrl={getPersonImage} >
+
+            <Record field="gender" label="Gender" />            <---------
+            <Record field="eyeColor" label="Eye Color" />       <---------
+
+          </ItemDetails>
+        );
+
+        const starshipDetails = (
+          <ItemDetails 
+            itemId={5}
+            getData={getStarship}
+            getImageUrl={getStarshipImage} >
+
+            <Record field="model" label="Model" />              <---------
+            <Record field="length" label="Length" />            <---------
+            <Record field="costInCredits" label="Cost" />       <---------
+
+          </ItemDetails>
+        );
+
+        return (
+          <div className="stardb-app">
+            <Header />
+
+            <Row 
+              left={personDetails}
+              right={starshipDetails} />
+
+          </div>
+        );
+      };  
     };
 
-    const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
+    <!-- item-details.js -->
+    import React, { Component } from 'react';
 
-    const { getPerson, getStarship, 
-            getPersonImage, getStarshipImage } = this.swapiService;
+    ..........
 
-    const personDetails = (
-      <ItemDetails 
-        itemId={11}
-        getData={getPerson}
-        getImageUrl={getPersonImage} >
-        
-        <Record field="gender" label="Gender" />            <---------
-        <Record field="eyeColor" label="Eye Color" />       <---------
-        
-      </ItemDetails>
-    );
+    const Record = ({ item, field, label }) => {        <--------
+      return (
+        <li className="list-group-item">
+        <span className="term">{label}</span>           <--------
+        <span>{item[field]}</span>                      <--------
+      </li>
+      )
+    };                                                    <--------
+    export {Record}                               <--------
 
-    const starshipDetails = (
-      <ItemDetails 
-        itemId={5}
-        getData={getStarship}
-        getImageUrl={getStarshipImage} >
+    export default class ItemDetails extends Component {
 
-        <Record field="model" label="Model" />              <---------
-        <Record field="length" label="Length" />            <---------
-        <Record field="costInCredits" label="Cost" />       <---------
+      swapiService = new SwapiService();
 
-      </ItemDetails>
-    );
+      state = {
+        item: null,
+        loading: true,
+        error: false,
+        image: null
+      };
 
-    return (
-      <div className="stardb-app">
-        <Header />
+      componentDidMount() {
+        this.updateItem();
+      };
 
-        <Row 
-          left={personDetails}
-          right={starshipDetails} />
+      componentDidUpdate(prevProps) {
+        if (this.props.itemId !== prevProps.itemId) {
+          this.setState({
+            loading: true
+          });
+          this.updateItem();
+        }
+      };
 
-      </div>
-    );
-  };  
-};
+      onPersenLoaded = (item) => {
+        const { getImageUrl } = this.props;
 
-<!-- item-details.js -->
-import React, { Component } from 'react';
+        this.setState({ 
+          item,
+          loading: false,
+          image: getImageUrl(item)
+        });
+      };
 
-..........
+      onError = (err) => {
+        this.setState({
+          loading: false,
+          error: true
+        });
+      };
 
-const Record = ({ item, field, label }) => {        <--------
-  return (
-    <li className="list-group-item">
-    <span className="term">{label}</span>           <--------
-    <span>{item[field]}</span>                      <--------
-  </li>
-  )
-};                                                    <--------
-export {Record}                               <--------
+      updateItem() {
+        const { itemId, getData } = this.props;
 
-export default class ItemDetails extends Component {
+        if (!itemId) {
+          return;
+        }
 
-  swapiService = new SwapiService();
+        getData(itemId)
+          .then(this.onPersenLoaded)
+          .catch(this.onError)
+      };
 
-  state = {
-    item: null,
-    loading: true,
-    error: false,
-    image: null
-  };
+      render() {
 
-  componentDidMount() {
-    this.updateItem();
-  };
+        const { item, loading, error, image } = this.state;
+        const { children } = this.props                         <--------
 
-  componentDidUpdate(prevProps) {
-    if (this.props.itemId !== prevProps.itemId) {
-      this.setState({
-        loading: true
-      });
-      this.updateItem();
-    }
-  };
+        const hasError = !(loading || error);
 
-  onPersenLoaded = (item) => {
-    const { getImageUrl } = this.props;
+        const errorMessage = error ? <ErrorIndicator /> : null;
+        const spinner = loading ? <Spinner /> : null;
 
-    this.setState({ 
-      item,
-      loading: false,
-      image: getImageUrl(item)
-    });
-  };
+        const content = hasError 
+              ? <PersonView 
+                  item={item} 
+                  image={image}
+                  children={children} />                        <--------
+              : null;
 
-  onError = (err) => {
-    this.setState({
-      loading: false,
-      error: true
-    });
-  };
+        return (
+          <div className="item-details card">
+            {errorMessage}
+            {spinner}
+            {content}
+          </div>
+        )
+      }
+    };
 
-  updateItem() {
-    const { itemId, getData } = this.props;
+    const PersonView = ({ item, image, children }) => {     <--------
 
-    if (!itemId) {
-      return;
-    }
+      const { id, name, gender,
+        birthYear, eyeColor } = item;
 
-    getData(itemId)
-      .then(this.onPersenLoaded)
-      .catch(this.onError)
-  };
+      return (
+        <React.Fragment>
+          <img className="item-image"
+              src={image}
+              alt="character"/>
 
-  render() {
-
-    const { item, loading, error, image } = this.state;
-    const { children } = this.props                         <--------
-
-    const hasError = !(loading || error);
-
-    const errorMessage = error ? <ErrorIndicator /> : null;
-    const spinner = loading ? <Spinner /> : null;
-    
-    const content = hasError 
-          ? <PersonView 
-              item={item} 
-              image={image}
-              children={children} />                        <--------
-          : null;
-
-    return (
-      <div className="item-details card">
-        {errorMessage}
-        {spinner}
-        {content}
-      </div>
-    )
-  }
-};
-
-const PersonView = ({ item, image, children }) => {     <--------
-
-  const { id, name, gender,
-    birthYear, eyeColor } = item;
-
-  return (
-    <React.Fragment>
-      <img className="item-image"
-          src={image}
-          alt="character"/>
-
-      <div className="card-body">
-        <h4>{name}</h4>
-        <ul className="list-group list-group-flush">
-        {                                                   <--------
-          React.Children.map(children, (child, idx) => {     <--------
-            return React.cloneElement(child, {item});       <--------
-          })                                                <--------
-        }                                                   <--------
-        </ul>
-        <ErrorButton />
-      </div>
-    </React.Fragment>
-  );
-};
+          <div className="card-body">
+            <h4>{name}</h4>
+            <ul className="list-group list-group-flush">
+            {                                                   <--------
+              React.Children.map(children, (child, idx) => {     <--------
+                return React.cloneElement(child, {item});       <--------
+              })                                                <--------
+            }                                                   <--------
+            </ul>
+            <ErrorButton />
+          </div>
+        </React.Fragment>
+      );
+    };
 
 
 
@@ -2516,78 +2526,78 @@ const PersonView = ({ item, image, children }) => {     <--------
 
 -Функция, которая создаёт компоненты и оборачивает существующие
 
-<!-- item-list.js -->
-import React, { Component } from 'react';
+    <!-- item-list.js -->
+    import React, { Component } from 'react';
 
-import './item-list.css';
-import { withData } from '../hoc-helper';                   <---------
-import SwapiService from '../../services/swapi-service';
+    import './item-list.css';
+    import { withData } from '../hoc-helper';                   <---------
+    import SwapiService from '../../services/swapi-service';
 
-const ItemList = (props) => {                                     <---------
+    const ItemList = (props) => {                                     <---------
 
-  const { data, onItemSelected, children: renderLable } = props;  <---------
+      const { data, onItemSelected, children: renderLable } = props;  <---------
 
-  const items = data.map((item) => {                              <---------
-    const { id } = item;                                          <---------
-    const label = renderLable(item);                              <---------
+      const items = data.map((item) => {                              <---------
+        const { id } = item;                                          <---------
+        const label = renderLable(item);                              <---------
 
-    return (                                              <---------
-      <li className="list-group-item"
-          key={id}                                    ......
-          onClick={() => onItemSelected(id)}>             <---------
-        {label}                                           .........
-      </li>
-    );                                                    <---------
-  });
-  
-  return (
-      <ul className="item-list list-group">
-        {items}
-      </ul>
-  );
-};
-
-const { getAllPeople } = new SwapiService();            <---------
-
-export default withData(ItemList, getAllPeople);        <---------
-
-<!-- with-data.js --> Новый фаил
-import React, { Component } from 'react';               <---------
-
-import Spinner from '../spinner';
-import ErrorIndicator from '../error-indicator';
-
-const withData = (View, getData) => {
-  return class extends Component {
-      
-    state = {
-      data: null                                      ........
-    };
-
-    componentDidMount() {
-
-      getData()                             
-      .then((data) => {
-          this.setState({
-            data
-          });
+        return (                                              <---------
+          <li className="list-group-item"
+              key={id}                                    ......
+              onClick={() => onItemSelected(id)}>             <---------
+            {label}                                           .........
+          </li>
+        );                                                    <---------
       });
+
+      return (
+          <ul className="item-list list-group">
+            {items}
+          </ul>
+      );
     };
 
-    render() {                                      .........
-          
-    const { data } = this.state;
+    const { getAllPeople } = new SwapiService();            <---------
 
-    if (!data) {
-    return <Spinner />
+    export default withData(ItemList, getAllPeople);        <---------
+
+    <!-- with-data.js --> Новый фаил
+    import React, { Component } from 'react';               <---------
+
+    import Spinner from '../spinner';
+    import ErrorIndicator from '../error-indicator';
+
+    const withData = (View, getData) => {
+      return class extends Component {
+
+        state = {
+          data: null                                      ........
+        };
+
+        componentDidMount() {
+
+          getData()                             
+          .then((data) => {
+              this.setState({
+                data
+              });
+          });
+        };
+
+        render() {                                      .........
+
+        const { data } = this.state;
+
+        if (!data) {
+        return <Spinner />
+        };
+
+        return <View {...this.props} data={data}/>
+        }
+      };
     };
 
-    return <View {...this.props} data={data}/>
-    }
-  };
-};
-
-export default withData;                                <---------
+    export default withData;                                <---------
 
 
 
@@ -2603,217 +2613,217 @@ export default withData;                                <---------
 -Для этого можно использовать HOC (компонент высшего порядка) или
   просто написать компонент-обертку вручную
 
-<!-- app.js -->
-import React, { Component } from 'react';
+    <!-- app.js -->
+    import React, { Component } from 'react';
 
-import './app.css';
+    import './app.css';
 
-import Header from '../header';
-import RandomPlanet from '../random-planet';
-import ErrorIndicator from '../error-indicator';
+    import Header from '../header';
+    import RandomPlanet from '../random-planet';
+    import ErrorIndicator from '../error-indicator';
 
-import ItemDetails, { Record } from '../item-details';             <------
-import SwapiService from '../../services/swapi-service';
-import Row from '../row';
-import ItemList from '../item-list/item-list';
+    import ItemDetails, { Record } from '../item-details';             <------
+    import SwapiService from '../../services/swapi-service';
+    import Row from '../row';
+    import ItemList from '../item-list/item-list';
 
-import {                                                      <------
-  PersonDetails, 
-  PlanetDetails, 
-  StarshipDetails,                                      ........
-  PersonList, 
-  PlanetList,                                           ..........
-  StarshipList 
-} from '../sw-components'                                     <------
+    import {                                                      <------
+      PersonDetails, 
+      PlanetDetails, 
+      StarshipDetails,                                      ........
+      PersonList, 
+      PlanetList,                                           ..........
+      StarshipList 
+    } from '../sw-components'                                     <------
 
-export default class App extends Component {
+    export default class App extends Component {
 
-  swapiService = new SwapiService();
+      swapiService = new SwapiService();
 
-  state = {
-    showRandomPlanet: true,
-    hasError: false
-  };
-
-  toggleRandomPlanet = () => {
-    this.setState((state) => {
-      return {
-        showRandomPlanet: !state.showRandomPlanet
+      state = {
+        showRandomPlanet: true,
+        hasError: false
       };
-    });
-  };
 
-  componentDidCatch() {
-    console.log('componentDidCatch');
-    this.setState({
-      hasError: true 
-    });
-  };
+      toggleRandomPlanet = () => {
+        this.setState((state) => {
+          return {
+            showRandomPlanet: !state.showRandomPlanet
+          };
+        });
+      };
 
-  render() {
+      componentDidCatch() {
+        console.log('componentDidCatch');
+        this.setState({
+          hasError: true 
+        });
+      };
 
-    if (this.state.hasError) {
-      return <ErrorIndicator />
+      render() {
+
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
+
+        const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
+
+
+        return (
+          <div className="stardb-app">
+            <Header />
+
+            <PersonDetails itemId={11} />                                     <------
+
+            <PlanetDetails itemId={5} />                                      <------
+
+            <StarshipDetails itemId={9} />                                    <------
+
+            <PersonList>                                                  <------
+              {({name}) => <span>{name}</span> }    
+            </PersonList>                                                 <------
+
+            <StarshipList>                                              <------
+              {({name}) => <span>{name}</span> }
+            </StarshipList>                                             <------
+
+            <PlanetList>                                                <------
+              {({name}) => <span>{name}</span> }
+            </PlanetList>                                               <------
+
+
+            {/* <Row 
+              left={personDetails}
+              right={starshipDetails} /> */}
+
+          </div>
+        );
+      };  
     };
 
-    const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
+    <!-- item-list.js -->
+    import React from 'react';
 
+    import './item-list.css';
 
-    return (
-      <div className="stardb-app">
-        <Header />
+    const ItemList = (props) => {
 
-        <PersonDetails itemId={11} />                                     <------
+      const { data, onItemSelected, children: renderLable } = props;
 
-        <PlanetDetails itemId={5} />                                      <------
+      const items = data.map((item) => {
+        const { id } = item;
+        const label = renderLable(item);
 
-        <StarshipDetails itemId={9} />                                    <------
+        return (
+          <li className="list-group-item"
+              key={id}
+              onClick={() => onItemSelected(id)}>
+            {label}
+          </li>
+        );
+      });
 
-        <PersonList>                                                  <------
-          {({name}) => <span>{name}</span> }    
-        </PersonList>                                                 <------
+      return (
+          <ul className="item-list list-group">
+            {items}
+          </ul>
+      );
+    };
+    export default ItemList;
 
-        <StarshipList>                                              <------
-          {({name}) => <span>{name}</span> }
-        </StarshipList>                                             <------
+    <!-- item-listS.js -->
+    import React from 'react';                                  <-------
 
-        <PlanetList>                                                <------
-          {({name}) => <span>{name}</span> }
-        </PlanetList>                                               <------
-      
+    import ItemList from '../item-list';
+    import { withData } from '../hoc-helper';
+    import SwapiService from '../../services/swapi-service';
 
-        {/* <Row 
-          left={personDetails}
-          right={starshipDetails} /> */}
+    const swapiService = new SwapiService();                    ........
 
-      </div>
-    );
-  };  
-};
+    const {
+      getAllPeople,
+      getAllStarships,
+      getAllPlanets
+    } = swapiService;                                           ........
 
-<!-- item-list.js -->
-import React from 'react';
+    const PersonList = withData(ItemList, getAllPeople);
 
-import './item-list.css';
+    const PlanetList = withData(ItemList, getAllPlanets);
 
-const ItemList = (props) => {
+    const StarshipList = withData(ItemList, getAllStarships);
 
-  const { data, onItemSelected, children: renderLable } = props;
+    export { 
+      PersonList, 
+      PlanetList, 
+      StarshipList 
+    };                                                          <------
 
-  const items = data.map((item) => {
-    const { id } = item;
-    const label = renderLable(item);
+    <!-- details.js -->
+    import React from 'react';                                  <------
 
-    return (
-      <li className="list-group-item"
-          key={id}
-          onClick={() => onItemSelected(id)}>
-        {label}
-      </li>
-    );
-  });
-  
-  return (
-      <ul className="item-list list-group">
-        {items}
-      </ul>
-  );
-};
-export default ItemList;
+    import ItemDetails, {Record} from '../item-details';
+    import SwapiService from '../../services/swapi-service';
 
-<!-- item-listS.js -->
-import React from 'react';                                  <-------
+    const swapiService = new SwapiService();
 
-import ItemList from '../item-list';
-import { withData } from '../hoc-helper';
-import SwapiService from '../../services/swapi-service';
+    const {
+      getPerson,
+      getPlanet,
+      getStarship,                                          ........
+      getPersonImage,
+      getPlanetImage,
+      getStarshipImage
+    } = swapiService;
 
-const swapiService = new SwapiService();                    ........
+    const PersonDetails = ({itemId}) => {
+      return (
+        <ItemDetails 
+          itemId={itemId}                                   .........
+          getData={getPerson}
+          getImageUrl={getPersonImage} >
 
-const {
-  getAllPeople,
-  getAllStarships,
-  getAllPlanets
-} = swapiService;                                           ........
+          <Record field="gender" label="Gender" />
+          <Record field="eyeColor" label="Eye Color" />
 
-const PersonList = withData(ItemList, getAllPeople);
+        </ItemDetails>
+      );
+    };
 
-const PlanetList = withData(ItemList, getAllPlanets);
+    const PlanetDetails = ({itemId}) => {                     .........
+      return (
+        <ItemDetails 
+          itemId={itemId}
+          getData={getPlanet}
+          getImageUrl={getPlanetImage} >
 
-const StarshipList = withData(ItemList, getAllStarships);
+          <Record field="population" label="Population" />
+          <Record field="rotationPerion" label="Rotation Period" />
+          <Record field="diameter" label="Diameter" />
 
-export { 
-  PersonList, 
-  PlanetList, 
-  StarshipList 
-};                                                          <------
+        </ItemDetails>
+      );
+    };
 
-<!-- details.js -->
-import React from 'react';                                  <------
+    const StarshipDetails = ({itemId}) => {                   ........
+      return (
+        <ItemDetails 
+          itemId={itemId}
+          getData={getStarship}
+          getImageUrl={getStarshipImage} >
 
-import ItemDetails, {Record} from '../item-details';
-import SwapiService from '../../services/swapi-service';
+          <Record field="model" label="Model" />
+          <Record field="length" label="Length" />
+          <Record field="costInCredits" label="Cost" />
 
-const swapiService = new SwapiService();
+        </ItemDetails>
+      );
+    };
 
-const {
-  getPerson,
-  getPlanet,
-  getStarship,                                          ........
-  getPersonImage,
-  getPlanetImage,
-  getStarshipImage
-} = swapiService;
-
-const PersonDetails = ({itemId}) => {
-  return (
-    <ItemDetails 
-      itemId={itemId}                                   .........
-      getData={getPerson}
-      getImageUrl={getPersonImage} >
-      
-      <Record field="gender" label="Gender" />
-      <Record field="eyeColor" label="Eye Color" />
-      
-    </ItemDetails>
-  );
-};
-
-const PlanetDetails = ({itemId}) => {                     .........
-  return (
-    <ItemDetails 
-      itemId={itemId}
-      getData={getPlanet}
-      getImageUrl={getPlanetImage} >
-
-      <Record field="population" label="Population" />
-      <Record field="rotationPerion" label="Rotation Period" />
-      <Record field="diameter" label="Diameter" />
-
-    </ItemDetails>
-  );
-};
-
-const StarshipDetails = ({itemId}) => {                   ........
-  return (
-    <ItemDetails 
-      itemId={itemId}
-      getData={getStarship}
-      getImageUrl={getStarshipImage} >
-
-      <Record field="model" label="Model" />
-      <Record field="length" label="Length" />
-      <Record field="costInCredits" label="Cost" />
-
-    </ItemDetails>
-  );
-};
-
-export { 
-  PersonDetails, 
-  PlanetDetails, 
-  StarshipDetails 
-};                                                     <------ 
+    export { 
+      PersonDetails, 
+      PlanetDetails, 
+      StarshipDetails 
+    };                                                     <------ 
 
 
 
@@ -2825,98 +2835,98 @@ export {
   const comp = (x) => f(g(x))
 
 -Компоненты высшего порядка это обычные функции, который возвращают
-  компоненты. Композиция работает и для находится
+  компоненты. 
 
--Так мы можем применять несколько "эффектов" находится
+-Так мы можем применять несколько "эффектов" 
 
-<!-- app.js -->
-import React, { Component } from 'react';
+    <!-- app.js -->
+    import React, { Component } from 'react';
 
-............
+    ............
 
-export default class App extends Component {
+    export default class App extends Component {
 
- ............
+     ............
 
-  render() {
+      render() {
 
-    if (this.state.hasError) {
-      return <ErrorIndicator />
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
+
+        const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
+
+
+        return (
+          <ErrorBoundry>
+            <div className="stardb-app">
+              <Header />
+
+              <PersonDetails itemId={11} />
+
+              <PlanetDetails itemId={5} />
+
+              <StarshipDetails itemId={9} />
+
+              <PersonList />                           <----------
+
+              <StarshipList />                          <----------
+
+              <PlanetList />                            <----------
+
+            </div>
+          </ErrorBoundry>
+        );
+      };  
     };
 
-    const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
+    <!-- item-listS.js -->
+    import React from 'react';
 
+    import ItemList from '../item-list';
+    import { withData } from '../hoc-helper';
+    import SwapiService from '../../services/swapi-service';
 
-    return (
-      <ErrorBoundry>
-        <div className="stardb-app">
-          <Header />
+    const swapiService = new SwapiService();
 
-          <PersonDetails itemId={11} />
+    const {
+      getAllPeople,
+      getAllStarships,
+      getAllPlanets
+    } = swapiService;
 
-          <PlanetDetails itemId={5} />
+    const withChildFunction = (Wrapped, fn) => {      <----------
+      function WithChildFunction(props) {             <---------
+        return (
+          <Wrapped {...props}>                      <----------
+            {fn}
+          </Wrapped>                                  <----------
+        )
+      };
+      return WithChildFunction;
+    };                                                <----------
 
-          <StarshipDetails itemId={9} />
+    const renderName = ({name}) => <span>{name}</span>;                           <----------
+    const renderModelAndName = ({model, name}) => <span>{name} ({model})</span>;  <----------
 
-          <PersonList />                           <----------
-           
-          <StarshipList />                          <----------
+    // const ListWithChildren = withChildFunction(ItemList, renderName);      <----------
+    const PersonList = withData( 
+                        withChildFunction(ItemList, renderName), 
+                        getAllPeople);                                        <----------
 
-          <PlanetList />                            <----------
+    const PlanetList = withData(                                            <----------
+                        withChildFunction(ItemList, renderName), 
+                        getAllPlanets);                                       <----------
 
-        </div>
-      </ErrorBoundry>
-    );
-  };  
-};
+    const StarshipList = withData(                                            <----------
+                        withChildFunction(ItemList, renderModelAndName), 
+                        getAllStarships);                                     <----------
 
-<!-- item-listS.js -->
-import React from 'react';
-
-import ItemList from '../item-list';
-import { withData } from '../hoc-helper';
-import SwapiService from '../../services/swapi-service';
-
-const swapiService = new SwapiService();
-
-const {
-  getAllPeople,
-  getAllStarships,
-  getAllPlanets
-} = swapiService;
-
-const withChildFunction = (Wrapped, fn) => {      <----------
-  function WithChildFunction(props) {             <---------
-    return (
-      <Wrapped {...props}>                      <----------
-        {fn}
-      </Wrapped>                                  <----------
-    )
-  };
-  return WithChildFunction;
-};                                                <----------
-
-const renderName = ({name}) => <span>{name}</span>;                           <----------
-const renderModelAndName = ({model, name}) => <span>{name} ({model})</span>;  <----------
-
-// const ListWithChildren = withChildFunction(ItemList, renderName);      <----------
-const PersonList = withData( 
-                    withChildFunction(ItemList, renderName), 
-                    getAllPeople);                                        <----------
-
-const PlanetList = withData(                                            <----------
-                    withChildFunction(ItemList, renderName), 
-                    getAllPlanets);                                       <----------
-
-const StarshipList = withData(                                            <----------
-                    withChildFunction(ItemList, renderModelAndName), 
-                    getAllStarships);                                     <----------
-
-export { 
-  PersonList, 
-  PlanetList, 
-  StarshipList 
-};
+    export { 
+      PersonList, 
+      PlanetList, 
+      StarshipList 
+    };
 
 
 
@@ -2949,138 +2959,138 @@ const {Provider, Consumer} = React.createService()
 </Consumer>
 
 
-<!-- app.js -->
-import React, { Component } from 'react';
+    <!-- app.js -->
+    import React, { Component } from 'react';
 
-.......
+    .......
 
-import { SwapiServiceProvider } from '../swapi-service-context'; <-------
-........
+    import { SwapiServiceProvider } from '../swapi-service-context'; <-------
+    ........
 
-render() {
+    render() {
 
-    if (this.state.hasError) {
-      return <ErrorIndicator />
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
+
+        return (
+          <ErrorBoundry>                                      
+            <SwapiServiceProvider value={this.swapiService}>  <------
+              <div className="stardb-app">
+                <Header />
+
+                <PersonDetails itemId={11} />
+
+                <PlanetDetails itemId={5} />
+
+                <StarshipDetails itemId={9} />
+
+                <PersonList />
+
+                <StarshipList />
+
+                <PlanetList />
+
+              </div>
+            </SwapiServiceProvider>                           <------
+          </ErrorBoundry>
+        );
+      };  
+
+    <!-- swapi-service-context.js -->
+    import React from 'react';                <-------
+
+    const {
+      Provider: SwapiServiceProvider,
+      Consumer: SwapiServiceConsumer        .........
+    } = React.createContext();
+
+    export {
+      SwapiServiceProvider,
+      SwapiServiceConsumer
+    };                                          <-------
+
+    <!-- details.js -->
+    import React from 'react';
+
+    import ItemDetails, { Record } from '../item-details';
+    import { SwapiServiceConsumer } from '../swapi-service-context';   <-----
+
+    //  const swapiService = new SwapiService()     <-Удален->
+
+    const PersonDetails = ({itemId}) => {
+      return (
+        <SwapiServiceConsumer>                              <-------
+          {
+            ({getPerson, getPersonImage}) => {              <-------
+              return (
+                <ItemDetails 
+                  itemId={itemId}
+                  getData={getPerson}
+                  getImageUrl={getPersonImage} >
+
+                  <Record field="gender" label="Gender" />
+                  <Record field="eyeColor" label="Eye Color" />
+                </ItemDetails>
+              )
+            } 
+          }
+        </SwapiServiceConsumer>                           <-------
+      );
     };
 
-    return (
-      <ErrorBoundry>                                      
-        <SwapiServiceProvider value={this.swapiService}>  <------
-          <div className="stardb-app">
-            <Header />
+    const PlanetDetails = ({itemId}) => {
+      return (
+        <SwapiServiceConsumer>                            <-------
+          {
+            ({getPlanet, getPlanetImage}) => {            <-------
+              return (
+                <ItemDetails 
+                  itemId={itemId}
+                  getData={getPlanet}
+                  getImageUrl={getPlanetImage} >
 
-            <PersonDetails itemId={11} />
+                  <Record field="population" label="Population" />
+                  <Record field="rotationPerion" label="Rotation Period" />
+                  <Record field="diameter" label="Diameter" />
+                </ItemDetails>
+              )
+            }
+          }
+        </SwapiServiceConsumer>                           <-------
 
-            <PlanetDetails itemId={5} />
+      );
+    };
 
-            <StarshipDetails itemId={9} />
+    const StarshipDetails = ({itemId}) => {
+      return (
+        <SwapiServiceConsumer>                            <-------
+          {
+            ({getStarship, getStarshipImage}) => {        <-------
+              return (
+                <ItemDetails 
+                  itemId={itemId}
+                  getData={getStarship}
+                  getImageUrl={getStarshipImage} >
 
-            <PersonList />
-            
-            <StarshipList />
+                  <Record field="model" label="Model" />
+                  <Record field="length" label="Length" />
+                  <Record field="costInCredits" label="Cost" />
 
-            <PlanetList />
+                </ItemDetails>
+              )
+            }
+          }
+        </SwapiServiceConsumer>                           <-------
 
-          </div>
-        </SwapiServiceProvider>                           <------
-      </ErrorBoundry>
-    );
-  };  
+      );
+    };
 
-<!-- swapi-service-context.js -->
-import React from 'react';                <-------
-
-const {
-  Provider: SwapiServiceProvider,
-  Consumer: SwapiServiceConsumer        .........
-} = React.createContext();
-
-export {
-  SwapiServiceProvider,
-  SwapiServiceConsumer
-};                                          <-------
-
-<!-- details.js -->
-import React from 'react';
-
-import ItemDetails, { Record } from '../item-details';
-import { SwapiServiceConsumer } from '../swapi-service-context';   <-----
-
-//  const swapiService = new SwapiService()     <-Удален->
-
-const PersonDetails = ({itemId}) => {
-  return (
-    <SwapiServiceConsumer>                              <-------
-      {
-        ({getPerson, getPersonImage}) => {              <-------
-          return (
-            <ItemDetails 
-              itemId={itemId}
-              getData={getPerson}
-              getImageUrl={getPersonImage} >
-              
-              <Record field="gender" label="Gender" />
-              <Record field="eyeColor" label="Eye Color" />
-            </ItemDetails>
-          )
-        } 
-      }
-    </SwapiServiceConsumer>                           <-------
-  );
-};
-
-const PlanetDetails = ({itemId}) => {
-  return (
-    <SwapiServiceConsumer>                            <-------
-      {
-        ({getPlanet, getPlanetImage}) => {            <-------
-          return (
-            <ItemDetails 
-              itemId={itemId}
-              getData={getPlanet}
-              getImageUrl={getPlanetImage} >
-        
-              <Record field="population" label="Population" />
-              <Record field="rotationPerion" label="Rotation Period" />
-              <Record field="diameter" label="Diameter" />
-            </ItemDetails>
-          )
-        }
-      }
-    </SwapiServiceConsumer>                           <-------
-
-  );
-};
-
-const StarshipDetails = ({itemId}) => {
-  return (
-    <SwapiServiceConsumer>                            <-------
-      {
-        ({getStarship, getStarshipImage}) => {        <-------
-          return (
-            <ItemDetails 
-              itemId={itemId}
-              getData={getStarship}
-              getImageUrl={getStarshipImage} >
-
-              <Record field="model" label="Model" />
-              <Record field="length" label="Length" />
-              <Record field="costInCredits" label="Cost" />
-
-            </ItemDetails>
-          )
-        }
-      }
-    </SwapiServiceConsumer>                           <-------
-    
-  );
-};
-
-export { 
-  PersonDetails, 
-  PlanetDetails, 
-  StarshipDetails 
-};
+    export { 
+      PersonDetails, 
+      PlanetDetails, 
+      StarshipDetails 
+    };
 
 
 
@@ -3097,115 +3107,115 @@ const withValueFromContext = (Wrapper) => {
   )
 }
 
-<!-- details.js -->
-<-Удален->
+    <!-- details.js -->
+    <-Удален->
 
-<!-- with-swapi-service.js -->
-import React from 'react';                                      <------
-import { SwapiServiceConsumer } from '../swapi-service-context';
+    <!-- with-swapi-service.js -->
+    import React from 'react';                                      <------
+    import { SwapiServiceConsumer } from '../swapi-service-context';
 
-const withSwapiService = (Wrapped) => {
-  function WithSwapiService(props) {                            <-------
-    return (
-      <SwapiServiceConsumer>
-        {
-          (swapiService) => {
-            return (
-              <Wrapped {...props} swapiService={swapiService} />  .....
-            )
+    const withSwapiService = (Wrapped) => {
+      function WithSwapiService(props) {                            <-------
+        return (
+          <SwapiServiceConsumer>
+            {
+              (swapiService) => {
+                return (
+                  <Wrapped {...props} swapiService={swapiService} />  .....
+                )
+              }
+            }
+          </SwapiServiceConsumer>
+        )
+      };
+      return WithSwapiService;
+    };
+
+    export default withSwapiService;                              <------
+
+
+    <!-- person-details.js -->
+    import React from 'react';                                <-------
+    import ItemDetails, { Record } from '../item-details';
+    import { withSwapiService } from '../hoc-helper';
+
+    const PersonDetails = ({itemId, swapiService}) => {       <-------
+      const {getPerson, getPersonImage} = swapiService;       <-------
+
+      return (
+        <ItemDetails 
+          itemId={itemId}
+          getData={getPerson}
+          getImageUrl={getPersonImage} >
+
+          <Record field="gender" label="Gender" />
+          <Record field="eyeColor" label="Eye Color" />
+        </ItemDetails>
+      )   
+    };
+
+    export default withSwapiService(PersonDetails);             <-------
+
+    <!--  planet-details.js -->
+    import React from 'react';                                      <------
+    import ItemDetails, { Record } from '../item-details';
+    import { SwapiServiceConsumer } from '../swapi-service-context';
+
+    const PlanetDetails = ({itemId}) => {
+      return (
+        <SwapiServiceConsumer>
+          {
+            ({getPlanet, getPlanetImage}) => {                      .....
+              return (
+                <ItemDetails 
+                  itemId={itemId}
+                  getData={getPlanet}
+                  getImageUrl={getPlanetImage} >                    .......
+
+                  <Record field="population" label="Population" />
+                  <Record field="rotationPerion" label="Rotation Period" />
+                  <Record field="diameter" label="Diameter" />
+                </ItemDetails>
+              )
+            }
           }
-        }
-      </SwapiServiceConsumer>
-    )
-  };
-  return WithSwapiService;
-};
+        </SwapiServiceConsumer>
 
-export default withSwapiService;                              <------
+      );
+    };
 
+    export default PlanetDetails;                             <------
 
-<!-- person-details.js -->
-import React from 'react';                                <-------
-import ItemDetails, { Record } from '../item-details';
-import { withSwapiService } from '../hoc-helper';
+    <!-- starship-details.js -->
+    import React from 'react';                                      <------
+    import ItemDetails, { Record } from '../item-details';
+    import { SwapiServiceConsumer } from '../swapi-service-context';
 
-const PersonDetails = ({itemId, swapiService}) => {       <-------
-  const {getPerson, getPersonImage} = swapiService;       <-------
+    const StarshipDetails = ({itemId}) => {
+      return (
+        <SwapiServiceConsumer>
+          {
+            ({getStarship, getStarshipImage}) => {
+              return (
+                <ItemDetails 
+                  itemId={itemId}                               .......
+                  getData={getStarship}                     
+                  getImageUrl={getStarshipImage} >
 
-  return (
-    <ItemDetails 
-      itemId={itemId}
-      getData={getPerson}
-      getImageUrl={getPersonImage} >
-      
-      <Record field="gender" label="Gender" />
-      <Record field="eyeColor" label="Eye Color" />
-    </ItemDetails>
-  )   
-};
+                  <Record field="model" label="Model" />
+                  <Record field="length" label="Length" />
+                  <Record field="costInCredits" label="Cost" />   .......
 
-export default withSwapiService(PersonDetails);             <-------
- 
-<!--  planet-details.js -->
-import React from 'react';                                      <------
-import ItemDetails, { Record } from '../item-details';
-import { SwapiServiceConsumer } from '../swapi-service-context';
+                </ItemDetails>
+              )
+            }
+          }
+        </SwapiServiceConsumer>
 
-const PlanetDetails = ({itemId}) => {
-  return (
-    <SwapiServiceConsumer>
-      {
-        ({getPlanet, getPlanetImage}) => {                      .....
-          return (
-            <ItemDetails 
-              itemId={itemId}
-              getData={getPlanet}
-              getImageUrl={getPlanetImage} >                    .......
-        
-              <Record field="population" label="Population" />
-              <Record field="rotationPerion" label="Rotation Period" />
-              <Record field="diameter" label="Diameter" />
-            </ItemDetails>
-          )
-        }
-      }
-    </SwapiServiceConsumer>
+      );
+    };
 
-  );
-};
-
-export default PlanetDetails;                             <------
-
-<!-- starship-details.js -->
-import React from 'react';                                      <------
-import ItemDetails, { Record } from '../item-details';
-import { SwapiServiceConsumer } from '../swapi-service-context';
-
-const StarshipDetails = ({itemId}) => {
-  return (
-    <SwapiServiceConsumer>
-      {
-        ({getStarship, getStarshipImage}) => {
-          return (
-            <ItemDetails 
-              itemId={itemId}                               .......
-              getData={getStarship}                     
-              getImageUrl={getStarshipImage} >
-
-              <Record field="model" label="Model" />
-              <Record field="length" label="Length" />
-              <Record field="costInCredits" label="Cost" />   .......
-
-            </ItemDetails>
-          )
-        }
-      }
-    </SwapiServiceConsumer>
-    
-  );
-};
-
-export default StarshipDetails;                           <------
+    export default StarshipDetails;                           <------
 
 
 
@@ -3220,165 +3230,165 @@ export default StarshipDetails;                           <------
 -При помощи дополнитеоьной функции (mapMethodsToProps) можно определять
   это поведение для каждого компонента
 
-<!-- app.js -->
-........
+    <!-- app.js -->
+    ........
 
-export default class App extends Component {
+    export default class App extends Component {
 
-  // swapiService = new SwapiService();       
-  swapiService = new DummySwapiService();       <-Для Теста->
+      // swapiService = new SwapiService();       
+      swapiService = new DummySwapiService();       <-Для Теста->
 
-  ........
-}
+      ........
+    }
 
-<!-- person-details.js -->
-import React from 'react';
-import ItemDetails, { Record } from '../item-details';
-import { withSwapiService } from '../hoc-helper';
+    <!-- person-details.js -->
+    import React from 'react';
+    import ItemDetails, { Record } from '../item-details';
+    import { withSwapiService } from '../hoc-helper';
 
-const PersonDetails = (props) => {                    <--------
-  return (
-    <ItemDetails {...props} >                         <--------
-      <Record field="gender" label="Gender" />
-      <Record field="eyeColor" label="Eye Color" />
-    </ItemDetails>
-  )   
-};
-
-const mapMethodsToProps = (swapiService) => {         <--------
-  return {
-    getData: swapiService.getPerson,
-    getImageUrl: swapiService.getPersonImage        ......
-  }
-};                                                    <--------
-
-export default withSwapiService(PersonDetails, mapMethodsToProps); <------
-
-<!-- planet-details.js -->
-import React from 'react';
-import ItemDetails, { Record } from '../item-details';
-import { withSwapiService } from '../hoc-helper';
-
-const PlanetDetails = (props) => {                            <------
-  return (
-    <ItemDetails {...props} >                                   <------
-      <Record field="population" label="Population" />
-      <Record field="rotationPeriod" label="Rotation Period" />
-      <Record field="diameter" label="Diameter" />
-    </ItemDetails>
-  )
-};
-
-const mapMethodsToProps = (swapiService) => {                 <------
-  return {
-    getData: swapiService.getPlanet,
-    getImageUrl: swapiService.getPlanetImage                ......
-  }
-};                                                            <------
-
-export default withSwapiService(PlanetDetails, mapMethodsToProps); <-----
-  
-<!-- starship-details.js -->
-import React from 'react';
-import ItemDetails, { Record } from '../item-details';
-import { withSwapiService } from '../hoc-helper'; 
-
-const StarshipDetails = (props) => {                  <------
-  return (
-    <ItemDetails {...props} >                         <------
-      <Record field="model" label="Model" />
-      <Record field="length" label="Length" />
-      <Record field="costInCredits" label="Cost" />
-    </ItemDetails>
-  )
-};
-
-const mapMethodsToProps = (swapiService) => {           <------
-  return {
-    getData: swapiService.getStarship,
-    getImageUrl: swapiService.getStarshipImage        .......
-  }
-};                                                      <------
-
-export default withSwapiService(StarshipDetails, mapMethodsToProps); <---
-
-<!-- item-listS.js -->
-import React from 'react';
-import ItemList from '../item-list';
-import { withData, withSwapiService } from '../hoc-helper';   <-----
-
-..........
-
-
-const mapPersonMethodsToProps = (swapiService) => {         <-----
-  return {
-    getData: swapiService.getAllPeople,                   ......
-  }
-};                                                          <-----
-
-const mapPlanetMethodsToProps = (swapiService) => {       <-----
-  return {
-    getData: swapiService.getAllPlanets,                  .....
-  }
-};                                                        <-----
-
-const mapStarshipMethodsToProps = (swapiService) => {     <-----
-  return {
-    getData: swapiService.getAllStarships,                .....
-  }
-};                                                        <-----
-
-const PersonList = withSwapiService(                      <-----
-                      withData( 
-                        withChildFunction(ItemList, renderName)),
-                    mapPersonMethodsToProps);                     <-----
-
-const PlanetList = withSwapiService(                              <-----
-                      withData( 
-                        withChildFunction(ItemList, renderName)),
-                    mapPlanetMethodsToProps);                     <-----
-
-const StarshipList = withSwapiService(                            <-----
-                        withData( 
-                          withChildFunction(ItemList, renderModelAndName)),
-                      mapStarshipMethodsToProps);                 <-----
-
-export { 
-  PersonList, 
-  PlanetList, 
-  StarshipList 
-};
-
-<!-- with-data.js -->
-........
-
-const withData = (View) => {              <--------
-  return class WithData extends Component {   <--------
-      
-    state = {
-      data: null,
-      error: false,
-      loading: true
+    const PersonDetails = (props) => {                    <--------
+      return (
+        <ItemDetails {...props} >                         <--------
+          <Record field="gender" label="Gender" />
+          <Record field="eyeColor" label="Eye Color" />
+        </ItemDetails>
+      )   
     };
 
-    componentDidMount() {
-      this.props.getData()                  <--------
-      .then((data) => {
-          this.setState({
-            data,
-            loading: false
+    const mapMethodsToProps = (swapiService) => {         <--------
+      return {
+        getData: swapiService.getPerson,
+        getImageUrl: swapiService.getPersonImage        ......
+      }
+    };                                                    <--------
+
+    export default withSwapiService(PersonDetails, mapMethodsToProps); <------
+
+    <!-- planet-details.js -->
+    import React from 'react';
+    import ItemDetails, { Record } from '../item-details';
+    import { withSwapiService } from '../hoc-helper';
+
+    const PlanetDetails = (props) => {                            <------
+      return (
+        <ItemDetails {...props} >                                   <------
+          <Record field="population" label="Population" />
+          <Record field="rotationPeriod" label="Rotation Period" />
+          <Record field="diameter" label="Diameter" />
+        </ItemDetails>
+      )
+    };
+
+    const mapMethodsToProps = (swapiService) => {                 <------
+      return {
+        getData: swapiService.getPlanet,
+        getImageUrl: swapiService.getPlanetImage                ......
+      }
+    };                                                            <------
+
+    export default withSwapiService(PlanetDetails, mapMethodsToProps); <-----
+
+    <!-- starship-details.js -->
+    import React from 'react';
+    import ItemDetails, { Record } from '../item-details';
+    import { withSwapiService } from '../hoc-helper'; 
+
+    const StarshipDetails = (props) => {                  <------
+      return (
+        <ItemDetails {...props} >                         <------
+          <Record field="model" label="Model" />
+          <Record field="length" label="Length" />
+          <Record field="costInCredits" label="Cost" />
+        </ItemDetails>
+      )
+    };
+
+    const mapMethodsToProps = (swapiService) => {           <------
+      return {
+        getData: swapiService.getStarship,
+        getImageUrl: swapiService.getStarshipImage        .......
+      }
+    };                                                      <------
+
+    export default withSwapiService(StarshipDetails, mapMethodsToProps); <---
+
+    <!-- item-listS.js -->
+    import React from 'react';
+    import ItemList from '../item-list';
+    import { withData, withSwapiService } from '../hoc-helper';   <-----
+
+    ..........
+
+
+    const mapPersonMethodsToProps = (swapiService) => {         <-----
+      return {
+        getData: swapiService.getAllPeople,                   ......
+      }
+    };                                                          <-----
+
+    const mapPlanetMethodsToProps = (swapiService) => {       <-----
+      return {
+        getData: swapiService.getAllPlanets,                  .....
+      }
+    };                                                        <-----
+
+    const mapStarshipMethodsToProps = (swapiService) => {     <-----
+      return {
+        getData: swapiService.getAllStarships,                .....
+      }
+    };                                                        <-----
+
+    const PersonList = withSwapiService(                      <-----
+                          withData( 
+                            withChildFunction(ItemList, renderName)),
+                        mapPersonMethodsToProps);                     <-----
+
+    const PlanetList = withSwapiService(                              <-----
+                          withData( 
+                            withChildFunction(ItemList, renderName)),
+                        mapPlanetMethodsToProps);                     <-----
+
+    const StarshipList = withSwapiService(                            <-----
+                            withData( 
+                              withChildFunction(ItemList, renderModelAndName)),
+                          mapStarshipMethodsToProps);                 <-----
+
+    export { 
+      PersonList, 
+      PlanetList, 
+      StarshipList 
+    };
+
+    <!-- with-data.js -->
+    ........
+
+    const withData = (View) => {              <--------
+      return class WithData extends Component {   <--------
+
+        state = {
+          data: null,
+          error: false,
+          loading: true
+        };
+
+        componentDidMount() {
+          this.props.getData()                  <--------
+          .then((data) => {
+              this.setState({
+                data,
+                loading: false
+              });
           });
-      });
-    };
+        };
 
-    onError = (err) => {
-      this.setState({
-        loading: false,
-        error: true
-      });
-    };
+        onError = (err) => {
+          this.setState({
+            loading: false,
+            error: true
+          });
+        };
 
-    render() { .... }
+        render() { .... }
 
 
 
@@ -3391,227 +3401,227 @@ const withData = (View) => {              <--------
 -componentDidUpdate() - функция в которой можно проверить, 
   какие свойства изменились
 
-<!-- app.js -->
-import React, { Component } from 'react';
+    <!-- app.js -->
+    import React, { Component } from 'react';
 
-.......
+    .......
 
-import { SwapiServiceProvider } from '../swapi-service-context';
+    import { SwapiServiceProvider } from '../swapi-service-context';
 
-import {
-  PersonDetails, 
-  PlanetDetails, 
-  StarshipDetails,
-  PersonList, 
-  PlanetList, 
-  StarshipList 
-} from '../sw-components'
+    import {
+      PersonDetails, 
+      PlanetDetails, 
+      StarshipDetails,
+      PersonList, 
+      PlanetList, 
+      StarshipList 
+    } from '../sw-components'
 
-export default class App extends Component {
+    export default class App extends Component {
 
-                <-new swapiService-перенесён в state->  
-  state = {
-    showRandomPlanet: true,
-    hasError: false,
-    // swapiService: new SwapiService(),      <--------
-    swapiService: new DummySwapiService()     <--------
-  };
-
-  onServiceChange = () => {
-    this.setState(({ swapiService }) => {
-
-      const Service = swapiService instanceof SwapiService ?  <--------
-                        DummySwapiService : SwapiService;     <--------
-
-      console.log('switched to', Service.name);
-
-      return {
-        swapiService: new Service()                 <--------
+                    <-new swapiService-перенесён в state->  
+      state = {
+        showRandomPlanet: true,
+        hasError: false,
+        // swapiService: new SwapiService(),      <--------
+        swapiService: new DummySwapiService()     <--------
       };
-    });
-  };
 
-  toggleRandomPlanet = () => {
-    this.setState((state) => {
-      return {
-        showRandomPlanet: !state.showRandomPlanet
+      onServiceChange = () => {
+        this.setState(({ swapiService }) => {
+
+          const Service = swapiService instanceof SwapiService ?  <--------
+                            DummySwapiService : SwapiService;     <--------
+
+          console.log('switched to', Service.name);
+
+          return {
+            swapiService: new Service()                 <--------
+          };
+        });
       };
-    });
-  };
 
-  componentDidCatch() {
-    console.log('componentDidCatch');
-    this.setState({
-      hasError: true 
-    });
-  };
+      toggleRandomPlanet = () => {
+        this.setState((state) => {
+          return {
+            showRandomPlanet: !state.showRandomPlanet
+          };
+        });
+      };
 
-  render() {
-
-    if (this.state.hasError) {
-      return <ErrorIndicator />
-    };
-
-    return (
-      <ErrorBoundry>
-        <SwapiServiceProvider value={this.state.swapiService}>  <--------
-          <div className="stardb-app">
-            <Header onServiceChange={this.onServiceChange} />
-
-            <PersonDetails itemId={11} />
-
-            <PlanetDetails itemId={5} />
-
-            <StarshipDetails itemId={9} />
-
-            <PersonList />
-            
-            <StarshipList />
-
-            <PlanetList />
-          </div>
-        </SwapiServiceProvider>
-      </ErrorBoundry>
-    );
-  };  
-};
-
-<!-- header.js -->
-import React from 'react';
-
-import './header.css';
-
-const Header = ({ onServiceChange }) => {
-  return (
-    <div className="header d-flex">
-      <h3>
-        <a href="#">
-          Star DB
-        </a>
-      </h3>
-      <ul className="d-flex">
-        <li>
-          <a href="#">People</a>
-        </li>
-        <li>
-          <a href="#">Planets</a>
-        </li>
-        <li>
-          <a href="#">Starships</a>
-        </li>
-      </ul>
-
-      <button                                   <--------
-          onClick={onServiceChange}
-          className="btn btn-primary btn-sm">   .......
-        Change Service
-      </button>
-    </div>                                      <--------
-  );
-};
-
-export default Header;
-
-<!-- with-data.js -->
-import React, { Component } from 'react';
-
-import Spinner from '../spinner';
-import ErrorIndicator from '../error-indicator';
-
-const withData = (View) => {
-  return class WithData extends Component {
-      
-    state = {
-      data: null,
-      error: false,
-      loading: true
-    };
-
-    componentDidUpdate(prevProps) {                     <--------
-      if (this.props.getData !== prevProps.getData) {
+      componentDidCatch() {
+        console.log('componentDidCatch');
         this.setState({
-          loading: true                                 <--------
+          hasError: true 
         });
-        this.update();                                  <--------
       };
-    };                            
 
-    componentDidMount() {                               <--------
-      this.update();                                    <--------
+      render() {
+
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
+
+        return (
+          <ErrorBoundry>
+            <SwapiServiceProvider value={this.state.swapiService}>  <--------
+              <div className="stardb-app">
+                <Header onServiceChange={this.onServiceChange} />
+
+                <PersonDetails itemId={11} />
+
+                <PlanetDetails itemId={5} />
+
+                <StarshipDetails itemId={9} />
+
+                <PersonList />
+
+                <StarshipList />
+
+                <PlanetList />
+              </div>
+            </SwapiServiceProvider>
+          </ErrorBoundry>
+        );
+      };  
     };
 
-    update() {                                          <--------
-      this.props.getData()
-        .then((data) => {
-            this.setState({
-              data,
-              loading: false
-            });
-        });
-    };                                                  <--------
+    <!-- header.js -->
+    import React from 'react';
 
-    onError = (err) => {
-      this.setState({
-        loading: false,
-        error: true
-      });
-    };
+    import './header.css';
 
-    render() {
-      const { data, error, loading } = this.state;
-
-      const hasError = !(loading || error);
-      const errorMessage = error ? <ErrorIndicator /> : null;
-      const spinner = loading ? <Spinner /> : null;
-
-      const content = hasError
-            ? <View {...this.props} data={data} /> 
-            : null;
-
+    const Header = ({ onServiceChange }) => {
       return (
-        <div>
-          {errorMessage}
-          {spinner}
-          {content}
-        </div>
-      )
+        <div className="header d-flex">
+          <h3>
+            <a href="#">
+              Star DB
+            </a>
+          </h3>
+          <ul className="d-flex">
+            <li>
+              <a href="#">People</a>
+            </li>
+            <li>
+              <a href="#">Planets</a>
+            </li>
+            <li>
+              <a href="#">Starships</a>
+            </li>
+          </ul>
+
+          <button                                   <--------
+              onClick={onServiceChange}
+              className="btn btn-primary btn-sm">   .......
+            Change Service
+          </button>
+        </div>                                      <--------
+      );
+    };
+
+    export default Header;
+
+    <!-- with-data.js -->
+    import React, { Component } from 'react';
+
+    import Spinner from '../spinner';
+    import ErrorIndicator from '../error-indicator';
+
+    const withData = (View) => {
+      return class WithData extends Component {
+
+        state = {
+          data: null,
+          error: false,
+          loading: true
+        };
+
+        componentDidUpdate(prevProps) {                     <--------
+          if (this.props.getData !== prevProps.getData) {
+            this.setState({
+              loading: true                                 <--------
+            });
+            this.update();                                  <--------
+          };
+        };                            
+
+        componentDidMount() {                               <--------
+          this.update();                                    <--------
+        };
+
+        update() {                                          <--------
+          this.props.getData()
+            .then((data) => {
+                this.setState({
+                  data,
+                  loading: false
+                });
+            });
+        };                                                  <--------
+
+        onError = (err) => {
+          this.setState({
+            loading: false,
+            error: true
+          });
+        };
+
+        render() {
+          const { data, error, loading } = this.state;
+
+          const hasError = !(loading || error);
+          const errorMessage = error ? <ErrorIndicator /> : null;
+          const spinner = loading ? <Spinner /> : null;
+
+          const content = hasError
+                ? <View {...this.props} data={data} /> 
+                : null;
+
+          return (
+            <div>
+              {errorMessage}
+              {spinner}
+              {content}
+            </div>
+          )
+        }
+      };
+    };
+
+    export default withData;
+
+    <!-- item-details.js -->
+    ..........
+
+    export default class ItemDetails extends Component {
+
+      state = {
+        item: null,
+        loading: true,
+        error: false,
+        image: null
+      };
+
+      componentDidMount() {
+        this.updateItem();
+      };
+
+      componentDidUpdate(prevProps) {
+        if (this.props.itemId !== prevProps.itemId ||
+            this.props.getData !== prevProps.getData ||           <-------
+            this.props.getImageUrl !== prevProps.getImageUrl) {   <-------
+          this.setState({
+            loading: true
+          });
+          this.updateItem();
+        }
+      };
+
+      onPersenLoaded = (item) => {
+
+        ..............
     }
-  };
-};
-
-export default withData;
-
-<!-- item-details.js -->
-..........
-
-export default class ItemDetails extends Component {
-
-  state = {
-    item: null,
-    loading: true,
-    error: false,
-    image: null
-  };
-
-  componentDidMount() {
-    this.updateItem();
-  };
-
-  componentDidUpdate(prevProps) {
-    if (this.props.itemId !== prevProps.itemId ||
-        this.props.getData !== prevProps.getData ||           <-------
-        this.props.getImageUrl !== prevProps.getImageUrl) {   <-------
-      this.setState({
-        loading: true
-      });
-      this.updateItem();
-    }
-  };
-
-  onPersenLoaded = (item) => {
-    
-    ..............
-}
 
 
 
@@ -3624,228 +3634,228 @@ export default class ItemDetails extends Component {
   подходящего для этого повествования.
                                                 Robert Martin
 
-<!-- app.js -->
-import React, { Component } from 'react';
-import './app.css';
+    <!-- app.js -->
+    import React, { Component } from 'react';
+    import './app.css';
 
-import Header from '../header';
-import RandomPlanet from '../random-planet';
-import ErrorIndicator from '../error-indicator';
-import SwapiService from '../../services/swapi-service';
-import DummySwapiService from '../../services/dummy-swapi-service';
-import ErrorBoundry from '../error-boundry';
+    import Header from '../header';
+    import RandomPlanet from '../random-planet';
+    import ErrorIndicator from '../error-indicator';
+    import SwapiService from '../../services/swapi-service';
+    import DummySwapiService from '../../services/dummy-swapi-service';
+    import ErrorBoundry from '../error-boundry';
 
-import { PeoplePage, PlanetPage, StarshipPage } from '../pages';      <-----
-import { SwapiServiceProvider } from '../swapi-service-context';
+    import { PeoplePage, PlanetPage, StarshipPage } from '../pages';      <-----
+    import { SwapiServiceProvider } from '../swapi-service-context';
 
-export default class App extends Component {
+    export default class App extends Component {
 
-  state = {
-    hasError: false,
-    swapiService: new SwapiService(),
-    // swapiService: new DummySwapiService()
-  };
-
-  onServiceChange = () => {
-    this.setState(({ swapiService }) => {
-
-      const Service = swapiService instanceof SwapiService ?
-                        DummySwapiService : SwapiService;
-
-      return {
-        swapiService: new Service()
+      state = {
+        hasError: false,
+        swapiService: new SwapiService(),
+        // swapiService: new DummySwapiService()
       };
-    });
-  };
 
-  componentDidCatch() {
-    this.setState({
-      hasError: true 
-    });
-  };
+      onServiceChange = () => {
+        this.setState(({ swapiService }) => {
 
-  render() {
+          const Service = swapiService instanceof SwapiService ?
+                            DummySwapiService : SwapiService;
 
-    if (this.state.hasError) {
-      return <ErrorIndicator />
-    };
-
-    return (
-      <ErrorBoundry>
-        <SwapiServiceProvider value={this.state.swapiService}>
-          <div className="stardb-app">
-            <Header onServiceChange={this.onServiceChange} />
-
-            <RandomPlanet />                                    <-----
-
-            <PeoplePage />                                      <-----
-            <PlanetPage />                                      <-----
-            <StarshipPage />                                    <-----
-
-          </div>
-        </SwapiServiceProvider>
-      </ErrorBoundry>
-    );
-  };  
-};
-
-<!-- people-page.js -->
-import React, { Component } from 'react';                       <-----
-
-import Row from '../row';
-import { PersonDetails, PersonList } from '../sw-components'
-
-export default class PeoplePage extends Component {
-
-  state = {
-    selectedItem: null
-  };
-
-  onItemSelected = (selectedItem) => {                         ........
-    this.setState({ selectedItem });
-  };
-
-  render() {
-    const { selectedItem } = this.state;
-    return (
-      <Row 
-        left={<PersonList onItemSelected={this.onItemSelected}/>}
-        right={<PersonDetails itemId={selectedItem} />} />
-    )
-  };
-};                                                              <-----
-
-<!-- planet-page.js -->
-import React, { Component } from 'react';                       <------
-
-import Row from '../row';
-import { PlanetDetails, PlanetList } from '../sw-components'
-
-export default class PlanetPage extends Component {
-
-  state = {
-    selectedItem: null
-  };
-
-  onItemSelected = (selectedItem) => {
-    this.setState({ selectedItem });                          ........
-  };
-
-  render() {
-    const { selectedItem } = this.state;
-    return (
-      <Row 
-        left={<PlanetList onItemSelected={this.onItemSelected}/>}
-        right={<PlanetDetails itemId={selectedItem} />} />
-    )
-  };
-};                                                              <------
-
-<!-- starship-page.js -->
-import React, { Component } from 'react';                         <-----
-
-import Row from '../row';
-import { StarshipDetails, StarshipList } from '../sw-components'
-
-export default class StarshipPage extends Component {
-
-  state = {
-    selectedItem: null
-  };
-
-  onItemSelected = (selectedItem) => {                            ......
-    this.setState({ selectedItem });
-  };
-
-  render() {
-    const { selectedItem } = this.state;
-    return (
-      <Row 
-        left={<StarshipList onItemSelected={this.onItemSelected}/>}
-        right={<StarshipDetails itemId={selectedItem} />} />
-    )
-  };
-};                                                                <-----
-
-<!-- with-data.js -->
-import React, { Component } from 'react';
-
-import Spinner from '../spinner';
-import ErrorIndicator from '../error-indicator';
-
-const withData = (View) => {
-  return class WithData extends Component {
-      
-    state = {
-      data: null,
-      error: false,
-      loading: true
-    };
-
-    componentDidUpdate(prevProps) {
-      if (this.props.getData !== prevProps.getData) {
-        this.setState({
-          loading: true
+          return {
+            swapiService: new Service()
+          };
         });
-        this.update();
+      };
+
+      componentDidCatch() {
+        this.setState({
+          hasError: true 
+        });
+      };
+
+      render() {
+
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
+
+        return (
+          <ErrorBoundry>
+            <SwapiServiceProvider value={this.state.swapiService}>
+              <div className="stardb-app">
+                <Header onServiceChange={this.onServiceChange} />
+
+                <RandomPlanet />                                    <-----
+
+                <PeoplePage />                                      <-----
+                <PlanetPage />                                      <-----
+                <StarshipPage />                                    <-----
+
+              </div>
+            </SwapiServiceProvider>
+          </ErrorBoundry>
+        );
+      };  
+    };
+
+    <!-- people-page.js -->
+    import React, { Component } from 'react';                       <-----
+
+    import Row from '../row';
+    import { PersonDetails, PersonList } from '../sw-components'
+
+    export default class PeoplePage extends Component {
+
+      state = {
+        selectedItem: null
+      };
+
+      onItemSelected = (selectedItem) => {                         ........
+        this.setState({ selectedItem });
+      };
+
+      render() {
+        const { selectedItem } = this.state;
+        return (
+          <Row 
+            left={<PersonList onItemSelected={this.onItemSelected}/>}
+            right={<PersonDetails itemId={selectedItem} />} />
+        )
+      };
+    };                                                              <-----
+
+    <!-- planet-page.js -->
+    import React, { Component } from 'react';                       <------
+
+    import Row from '../row';
+    import { PlanetDetails, PlanetList } from '../sw-components'
+
+    export default class PlanetPage extends Component {
+
+      state = {
+        selectedItem: null
+      };
+
+      onItemSelected = (selectedItem) => {
+        this.setState({ selectedItem });                          ........
+      };
+
+      render() {
+        const { selectedItem } = this.state;
+        return (
+          <Row 
+            left={<PlanetList onItemSelected={this.onItemSelected}/>}
+            right={<PlanetDetails itemId={selectedItem} />} />
+        )
+      };
+    };                                                              <------
+
+    <!-- starship-page.js -->
+    import React, { Component } from 'react';                         <-----
+
+    import Row from '../row';
+    import { StarshipDetails, StarshipList } from '../sw-components'
+
+    export default class StarshipPage extends Component {
+
+      state = {
+        selectedItem: null
+      };
+
+      onItemSelected = (selectedItem) => {                            ......
+        this.setState({ selectedItem });
+      };
+
+      render() {
+        const { selectedItem } = this.state;
+        return (
+          <Row 
+            left={<StarshipList onItemSelected={this.onItemSelected}/>}
+            right={<StarshipDetails itemId={selectedItem} />} />
+        )
+      };
+    };                                                                <-----
+
+    <!-- with-data.js -->
+    import React, { Component } from 'react';
+
+    import Spinner from '../spinner';
+    import ErrorIndicator from '../error-indicator';
+
+    const withData = (View) => {
+      return class WithData extends Component {
+
+        state = {
+          data: null,
+          error: false,
+          loading: true
+        };
+
+        componentDidUpdate(prevProps) {
+          if (this.props.getData !== prevProps.getData) {
+            this.setState({
+              loading: true
+            });
+            this.update();
+          };
+        };
+
+        componentDidMount() {
+          this.update();
+        };
+
+        update() {
+          this.setState({                                         <--------
+            loading: true,
+            error: false
+          });                                                     <--------
+
+          this.props.getData()
+            .then((data) => {
+              this.setState({
+                data,
+                loading: false
+              });
+            })
+            .catch(() => {                                         <--------
+              this.setState({
+                error: true,
+                loading: false
+              });
+            })                                                    <--------
+        };
+
+        onError = (err) => {
+          this.setState({
+            loading: false,
+            error: true
+          });
+        };
+
+        render() {
+          const { data, error, loading } = this.state;
+
+          const hasError = !(loading || error);
+          const errorMessage = error ? <ErrorIndicator /> : null;
+          const spinner = loading ? <Spinner /> : null;
+
+          const content = hasError
+                ? <View {...this.props} data={data} /> 
+                : null;
+
+          return (
+            <div>
+              {errorMessage}
+              {spinner}
+              {content}
+            </div>
+          )
+        }
       };
     };
 
-    componentDidMount() {
-      this.update();
-    };
-
-    update() {
-      this.setState({                                         <--------
-        loading: true,
-        error: false
-      });                                                     <--------
-
-      this.props.getData()
-        .then((data) => {
-          this.setState({
-            data,
-            loading: false
-          });
-        })
-        .catch(() => {                                         <--------
-          this.setState({
-            error: true,
-            loading: false
-          });
-        })                                                    <--------
-    };
-
-    onError = (err) => {
-      this.setState({
-        loading: false,
-        error: true
-      });
-    };
-
-    render() {
-      const { data, error, loading } = this.state;
-
-      const hasError = !(loading || error);
-      const errorMessage = error ? <ErrorIndicator /> : null;
-      const spinner = loading ? <Spinner /> : null;
-
-      const content = hasError
-            ? <View {...this.props} data={data} /> 
-            : null;
-
-      return (
-        <div>
-          {errorMessage}
-          {spinner}
-          {content}
-        </div>
-      )
-    }
-  };
-};
-
-export default withData;
+    export default withData;
 
 
 
@@ -3865,111 +3875,111 @@ add(1)(2);
 -Такие функции принимают часть аргументов и возвращают 
   новые функции - с меньшим количеством аргументов
 
-<!-- item-listS.js -->
-........
+    <!-- item-listS.js -->
+    ........
 
 
-const PersonList = withSwapiService(mapPersonMethodsToProps)(         <-------
-  withData( 
-    withChildFunction(renderName)(                                    <-------
-      ItemList)));                                                    <-------
-
-const PlanetList = withSwapiService(mapPlanetMethodsToProps)(         <-------
-    withData( 
-      withChildFunction(renderName)(                                  <-------
-        ItemList)));                                                  <-------
-
-const StarshipList = withSwapiService(mapStarshipMethodsToProps)(     <-------
+    const PersonList = withSwapiService(mapPersonMethodsToProps)(         <-------
       withData( 
-        withChildFunction(renderModelAndName)(                        <-------
-          ItemList)));                                                <-------
+        withChildFunction(renderName)(                                    <-------
+          ItemList)));                                                    <-------
+
+    const PlanetList = withSwapiService(mapPlanetMethodsToProps)(         <-------
+        withData( 
+          withChildFunction(renderName)(                                  <-------
+            ItemList)));                                                  <-------
+
+    const StarshipList = withSwapiService(mapStarshipMethodsToProps)(     <-------
+          withData( 
+            withChildFunction(renderModelAndName)(                        <-------
+              ItemList)));                                                <-------
 
 
-// const PersonList = withSwapiService(
-//                       withData( 
-//                         withChildFunction(ItemList, renderName)),
-//                     mapPersonMethodsToProps);
-// const PlanetList = withSwapiService(
-//                       withData( 
-//                         withChildFunction(ItemList, renderName)),
-//                     mapPlanetMethodsToProps);
+    // const PersonList = withSwapiService(
+    //                       withData( 
+    //                         withChildFunction(ItemList, renderName)),
+    //                     mapPersonMethodsToProps);
+    // const PlanetList = withSwapiService(
+    //                       withData( 
+    //                         withChildFunction(ItemList, renderName)),
+    //                     mapPlanetMethodsToProps);
 
-// const StarshipList = withSwapiService(
-//                         withData( 
-//                           withChildFunction(ItemList, renderModelAndName)),
-//                       mapStarshipMethodsToProps);
+    // const StarshipList = withSwapiService(
+    //                         withData( 
+    //                           withChildFunction(ItemList, renderModelAndName)),
+    //                       mapStarshipMethodsToProps);
 
-export { 
-  PersonList, 
-  PlanetList, 
-  StarshipList 
-};
+    export { 
+      PersonList, 
+      PlanetList, 
+      StarshipList 
+    };
 
-<!-- with-swapi-service.js -->
-import React from 'react';
-import { SwapiServiceConsumer } from '../swapi-service-context';
+    <!-- with-swapi-service.js -->
+    import React from 'react';
+    import { SwapiServiceConsumer } from '../swapi-service-context';
 
-const withSwapiService = (mapMethodsToProps) => (Wrapped) => {        <-------
-  function WithSwapiService(props) {
-    return (
-      <SwapiServiceConsumer>
-        {
-          (swapiService) => {
-            const serviceProps = mapMethodsToProps(swapiService);
+    const withSwapiService = (mapMethodsToProps) => (Wrapped) => {        <-------
+      function WithSwapiService(props) {
+        return (
+          <SwapiServiceConsumer>
+            {
+              (swapiService) => {
+                const serviceProps = mapMethodsToProps(swapiService);
 
-            return (
-              <Wrapped {...props} {...serviceProps} />
-            )
-          }
-        }
-      </SwapiServiceConsumer>
-    )
-  };
-  return WithSwapiService;
-};
+                return (
+                  <Wrapped {...props} {...serviceProps} />
+                )
+              }
+            }
+          </SwapiServiceConsumer>
+        )
+      };
+      return WithSwapiService;
+    };
 
-export default withSwapiService;
+    export default withSwapiService;
 
-<!-- starship-details.js -->
-......
+    <!-- starship-details.js -->
+    ......
 
-const mapMethodsToProps = (swapiService) => {
-  return {
-    getData: swapiService.getStarship,
-  ..........
-};
+    const mapMethodsToProps = (swapiService) => {
+      return {
+        getData: swapiService.getStarship,
+      ..........
+    };
 
-export default withSwapiService(mapMethodsToProps)(StarshipDetails);  <-------
+    export default withSwapiService(mapMethodsToProps)(StarshipDetails);  <-------
 
-<!-- person-details.js -->
-........
+    <!-- person-details.js -->
+    ........
 
-const mapMethodsToProps = (swapiService) => {
-  return {
-    getData: swapiService.getPerson,
-    getImageUrl: swapiService.getPersonImage
-  }
-};
+    const mapMethodsToProps = (swapiService) => {
+      return {
+        getData: swapiService.getPerson,
+        getImageUrl: swapiService.getPersonImage
+      }
+    };
 
-export default withSwapiService(mapMethodsToProps)(PersonDetails);  <--------
+    export default withSwapiService(mapMethodsToProps)(PersonDetails);  <--------
 
-<!-- planet-details.js -->
-.......
+    <!-- planet-details.js -->
+    .......
 
-const mapMethodsToProps = (swapiService) => {
-  return {
-    getData: swapiService.getPlanet,
-    getImageUrl: swapiService.getPlanetImage
-  }
-};
+    const mapMethodsToProps = (swapiService) => {
+      return {
+        getData: swapiService.getPlanet,
+        getImageUrl: swapiService.getPlanetImage
+      }
+    };
 
-export default withSwapiService(mapMethodsToProps)(PlanetDetails);  <------
+    export default withSwapiService(mapMethodsToProps)(PlanetDetails);  <------
 
 
 
 ---Функция compose()
 
--Реализует композиция в виде функции
+-Реализует композицию в виде функции
 
 const = (...funcs) => (comp) => {
   return funcs.reduceRight(
@@ -4010,76 +4020,76 @@ prevResult=c value=b will return cb
 prevResult=cb value=a will return cba
 result is cba
 
-<!-- item-listS.js -->
-........
+    <!-- item-listS.js -->
+    ........
 
-<-withChildFunction перенесена в отдьльный файл->
+    <-withChildFunction перенесена в отдьльный файл->
 
 
-const PersonList = compose(                                       <-----
-                      withSwapiService(mapPersonMethodsToProps),  <-----
-                      withData,                                   <-----
-                      withChildFunction(renderName)               <-----
-                    )(ItemList);                                  <-----
+    const PersonList = compose(                                       <-----
+                          withSwapiService(mapPersonMethodsToProps),  <-----
+                          withData,                                   <-----
+                          withChildFunction(renderName)               <-----
+                        )(ItemList);                                  <-----
 
-const PlanetList = compose(                                       <-----
-                      withSwapiService(mapPlanetMethodsToProps),  <-----
-                      withData,                                   <-----
-                      withChildFunction(renderName)               <-----
-                    )(ItemList);                                  <-----
+    const PlanetList = compose(                                       <-----
+                          withSwapiService(mapPlanetMethodsToProps),  <-----
+                          withData,                                   <-----
+                          withChildFunction(renderName)               <-----
+                        )(ItemList);                                  <-----
 
-const StarshipList = compose(                                       <-----
-                        withSwapiService(mapStarshipMethodsToProps),  <-----
-                        withData,                                   <-----
-                        withChildFunction(renderModelAndName)         <-----
-                      )(ItemList);                                  <-----
+    const StarshipList = compose(                                       <-----
+                            withSwapiService(mapStarshipMethodsToProps),  <-----
+                            withData,                                   <-----
+                            withChildFunction(renderModelAndName)         <-----
+                          )(ItemList);                                  <-----
 
-// const PersonList = withSwapiService(mapPersonMethodsToProps)(
-//                     withData( 
-//                       withChildFunction(renderName)(
-//                         ItemList)));
+    // const PersonList = withSwapiService(mapPersonMethodsToProps)(
+    //                     withData( 
+    //                       withChildFunction(renderName)(
+    //                         ItemList)));
 
-// const PlanetList = withSwapiService(mapPlanetMethodsToProps)(
-//                     withData( 
-//                       withChildFunction(renderName)(
-//                         ItemList)));
+    // const PlanetList = withSwapiService(mapPlanetMethodsToProps)(
+    //                     withData( 
+    //                       withChildFunction(renderName)(
+    //                         ItemList)));
 
-// const StarshipList = withSwapiService(mapStarshipMethodsToProps)(
-//                       withData( 
-//                         withChildFunction(renderModelAndName)(
-//                           ItemList)));
+    // const StarshipList = withSwapiService(mapStarshipMethodsToProps)(
+    //                       withData( 
+    //                         withChildFunction(renderModelAndName)(
+    //                           ItemList)));
 
-export { 
-  PersonList, 
-  PlanetList, 
-  StarshipList 
-};
+    export { 
+      PersonList, 
+      PlanetList, 
+      StarshipList 
+    };
 
-<!-- with-child-function.js -->
-import React from 'react';                        <-------
+    <!-- with-child-function.js -->
+    import React from 'react';                        <-------
 
-const withChildFunction = (fn) => (Wrapped) => {
-  function WithChildFunction(props) {
-    return (
-      <Wrapped {...props}>                        .........
-      <Wrapped {...props}>                        .........
-      <Wrapped {...props}>                        .........
-        {fn}
-      </Wrapped>
-    )
-  }
-  return WithChildFunction;
-};
+    const withChildFunction = (fn) => (Wrapped) => {
+      function WithChildFunction(props) {
+        return (
+          <Wrapped {...props}>                        .........
+          <Wrapped {...props}>                        .........
+          <Wrapped {...props}>                        .........
+            {fn}
+          </Wrapped>
+        )
+      }
+      return WithChildFunction;
+    };
 
-export default withChildFunction;                   <-------
+    export default withChildFunction;                   <-------
 
-<!-- compose.js -->
-const compose = (...funcs) => (comp) => {         <-------
-  return funcs.reduceRight(
-    (prevResult, f) => f(prevResult), comp);      ........
-};
+    <!-- compose.js -->
+    const compose = (...funcs) => (comp) => {         <-------
+      return funcs.reduceRight(
+        (prevResult, f) => f(prevResult), comp);      ........
+    };
 
-export default compose;                           <-------
+    export default compose;                           <-------
 
 
 
@@ -4099,60 +4109,60 @@ static defaultProps = {
 >Отрендерит Hi AAA
 <Comp />
 
-<!-- item-list.js -->
-import React from 'react';
+    <!-- item-list.js -->
+    import React from 'react';
 
-import './item-list.css';
+    import './item-list.css';
 
-const ItemList = (props) => {
+    const ItemList = (props) => {
 
-  const { data, onItemSelected, children: renderLable } = props;
+      const { data, onItemSelected, children: renderLable } = props;
 
-  const items = data.map((item) => {
- .........
+      const items = data.map((item) => {
+     .........
 
-};
+    };
 
-ItemList.defaultProps = {                           <-------
-  onItemSelected: () => {}
-};                                                  <-------
+    ItemList.defaultProps = {                           <-------
+      onItemSelected: () => {}
+    };                                                  <-------
 
-export default ItemList;
+    export default ItemList;
 
-<!-- people-page.js -->
-.......
-.....
-<Row 
-  left={<PersonList onItemSelected={this.onItemSelected} />} <-При отсутствии onItemSelected не будет ошибки->
-  right={<PersonDetails itemId={selectedItem} />} />
-};
+    <!-- people-page.js -->
+    .......
+    .....
+    <Row 
+      left={<PersonList onItemSelected={this.onItemSelected} />} <-При отсутствии onItemSelected не будет ошибки->
+      right={<PersonDetails itemId={selectedItem} />} />
+    };
 
-<!-- random-planet.js -->
-.......
-export default class RandomPlanet extends Component {
+    <!-- random-planet.js -->
+    .......
+    export default class RandomPlanet extends Component {
 
-  static defaultProps = {                   <-------
-    updateInterval: 6000
-  };                                        <-------
+      static defaultProps = {                   <-------
+        updateInterval: 6000
+      };                                        <-------
 
-  swapiService = new SwapiService();
+      swapiService = new SwapiService();
 
-  state = {
-    planet: {},
-    loading: true,
-    error: false
-  };
-  
-  componentDidMount() {
-    const { updateInterval } = this.props;                    <-------
-    this.updatePlanet();
-    this.interval = setInterval(this.updatePlanet, updateInterval); <-------
-  };
-  ........
-}
-// RandomPlanet.defaultProps = {                    <------
-//   updateInterval: 6000
-// };                                               <------
+      state = {
+        planet: {},
+        loading: true,
+        error: false
+      };
+
+      componentDidMount() {
+        const { updateInterval } = this.props;                    <-------
+        this.updatePlanet();
+        this.interval = setInterval(this.updatePlanet, updateInterval); <-------
+      };
+      ........
+    }
+    // RandomPlanet.defaultProps = {                    <------
+    //   updateInterval: 6000
+    // };                                               <------
 
 
 
@@ -4169,25 +4179,25 @@ Comp.propTypes = {
 
 -Функция-валидатор возвращает null или Error
 
-<!-- random-planet.js -->
-........
-export default class RandomPlanet extends Component {
+    <!-- random-planet.js -->
+    ........
+    export default class RandomPlanet extends Component {
 
-  static defaultProps = {
-    updateInterval: 6000
-  };
+      static defaultProps = {
+        updateInterval: 6000
+      };
 
-  static propTypes = {                                      <-------
-    updateInterval: (props, propName, componentName) => {
-      const value = props[propName];
+      static propTypes = {                                      <-------
+        updateInterval: (props, propName, componentName) => {
+          const value = props[propName];
 
-      if (typeof value === 'number' && !isNaN(value)) {         ......
-        return null;
-      }
-      return new TypeError(`${componentName}: ${propName} must be number`);
-    }
-  };                                                          <-------
-.......
+          if (typeof value === 'number' && !isNaN(value)) {         ......
+            return null;
+          }
+          return new TypeError(`${componentName}: ${propName} must be number`);
+        }
+      };                                                          <-------
+    .......
 
 
 
@@ -4209,71 +4219,71 @@ MyComponent.propTypes = {
 -Есть другие библиотеки, с дополнительными валидаторами.
   Пример: airbnb-prop-types
 
-<!-- random-planet.js -->
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';                       <------
+    <!-- random-planet.js -->
+    import React, { Component } from 'react';
+    import PropTypes from 'prop-types';                       <------
 
-import SwapiService from '../../services/swapi-service';
+    import SwapiService from '../../services/swapi-service';
 
-import './random-planet.css';
-import Spinner from '../spinner/spinner';
-import ErrorIndicator from '../error-indicator';
+    import './random-planet.css';
+    import Spinner from '../spinner/spinner';
+    import ErrorIndicator from '../error-indicator';
 
-export default class RandomPlanet extends Component {
+    export default class RandomPlanet extends Component {
 
-  static defaultProps = {
-    updateInterval: 6000
-  };
+      static defaultProps = {
+        updateInterval: 6000
+      };
 
-  static propTypes = {                              <------
-    updateInterval: PropTypes.number                <------
-  };
-........
+      static propTypes = {                              <------
+        updateInterval: PropTypes.number                <------
+      };
+    ........
 
-<!-- row.js -->
-import React from 'react';
-import PropTypes from 'prop-types';       <-------
+    <!-- row.js -->
+    import React from 'react';
+    import PropTypes from 'prop-types';       <-------
 
-import './row.css'
+    import './row.css'
 
-const Row = ({left, right}) => {
-  return (
-    .......
-  )
-};
+    const Row = ({left, right}) => {
+      return (
+        .......
+      )
+    };
 
-Row.propTypes = {                         <-------
-  left: PropTypes.node,
-  right: PropTypes.node
-};                                        <-------
+    Row.propTypes = {                         <-------
+      left: PropTypes.node,
+      right: PropTypes.node
+    };                                        <-------
 
-export default Row;
+    export default Row;
 
-<!-- item-list.js -->
-import React from 'react';
-import PropTypes from 'prop-types';             <-------
+    <!-- item-list.js -->
+    import React from 'react';
+    import PropTypes from 'prop-types';             <-------
 
-import './item-list.css';
+    import './item-list.css';
 
-const ItemList = (props) => {
+    const ItemList = (props) => {
 
-  const { data, onItemSelected, children: renderLable } = props;
+      const { data, onItemSelected, children: renderLable } = props;
 
-    ............
+        ............
 
-};
+    };
 
-ItemList.defaultProps = {                   
-  onItemSelected: () => {}
-};
+    ItemList.defaultProps = {                   
+      onItemSelected: () => {}
+    };
 
-ItemList.propTypes = {                                  <-------
-  onItemSelected: PropTypes.func,                         <-------
-  data: PropTypes.arrayOf(PropTypes.object).isRequired,   <-------
-  children: PropTypes.func.isRequired                       <-------
-}
+    ItemList.propTypes = {                                  <-------
+      onItemSelected: PropTypes.func,                         <-------
+      data: PropTypes.arrayOf(PropTypes.object).isRequired,   <-------
+      children: PropTypes.func.isRequired                       <-------
+    }
 
-export default ItemList;
+    export default ItemList;
 
 
 
@@ -4315,46 +4325,46 @@ const HookSwitcher = () => {
 -React Router это не часть React - это дополнительная библиотека.
   Есть и другие библиотеки для роутинга (к примеру, UI-Router)
 
-<!-- app.js -->
-import React, { Component } from 'react';
+    <!-- app.js -->
+    import React, { Component } from 'react';
 
-........
+    ........
 
-import { BrowserRouter as Router, Route } from 'react-router-dom';  <--------
+    import { BrowserRouter as Router, Route } from 'react-router-dom';  <--------
 
-export default class App extends Component {
+    export default class App extends Component {
 
-  ...............
+      ...............
 
-  render() {
+      render() {
 
-    if (this.state.hasError) {
-      return <ErrorIndicator />
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
+
+        return (
+          <ErrorBoundry>
+            <SwapiServiceProvider value={this.state.swapiService}>
+              <Router>
+                <div className="stardb-app">
+                  <Header onServiceChange={this.onServiceChange} />
+                  <RandomPlanet />
+
+                  <Route path="/people" component={PeoplePage} />         <--------
+                  <Route path="/planets" component={PlanetPage} />      <----------
+                  <Route path="/starships" component={StarshipPage} />    <---------
+
+                  {/* <PeoplePage />
+                  <PlanetPage />
+                  <StarshipPage /> */}
+
+                </div>
+              </Router>
+            </SwapiServiceProvider>
+          </ErrorBoundry>
+        );
+      };  
     };
-
-    return (
-      <ErrorBoundry>
-        <SwapiServiceProvider value={this.state.swapiService}>
-          <Router>
-            <div className="stardb-app">
-              <Header onServiceChange={this.onServiceChange} />
-              <RandomPlanet />
-
-              <Route path="/people" component={PeoplePage} />         <--------
-              <Route path="/planets" component={PlanetPage} />      <----------
-              <Route path="/starships" component={StarshipPage} />    <---------
-
-              {/* <PeoplePage />
-              <PlanetPage />
-              <StarshipPage /> */}
-
-            </div>
-          </Router>
-        </SwapiServiceProvider>
-      </ErrorBoundry>
-    );
-  };  
-};
 
 
 
@@ -4367,42 +4377,42 @@ export default class App extends Component {
 -Link работает почти как тэг <a>, но он не перезагружает страницу
   (и при этом обновляет URL в адрестной строке)
 
-<!-- header.js -->
-import React from 'react';
-import { Link } from 'react-router-dom';                <---------
+    <!-- header.js -->
+    import React from 'react';
+    import { Link } from 'react-router-dom';                <---------
 
-import './header.css';
+    import './header.css';
 
-const Header = ({ onServiceChange }) => {
-  return (
-    <div className="header d-flex">
-      <h3>
-        <Link to="/">                                 <--------
-          Star DB
-        </Link>                                       <---------
-      </h3>
-      <ul className="d-flex">
-        <li>
-          <Link to="/people">People</Link>              <---------
-        </li>
-        <li>
-        <Link to="/planets">Planets</Link>              <---------
-        </li>
-        <li>
-        <Link to="/starships">Starships</Link>          <---------
-        </li>
-      </ul>
+    const Header = ({ onServiceChange }) => {
+      return (
+        <div className="header d-flex">
+          <h3>
+            <Link to="/">                                 <--------
+              Star DB
+            </Link>                                       <---------
+          </h3>
+          <ul className="d-flex">
+            <li>
+              <Link to="/people">People</Link>              <---------
+            </li>
+            <li>
+            <Link to="/planets">Planets</Link>              <---------
+            </li>
+            <li>
+            <Link to="/starships">Starships</Link>          <---------
+            </li>
+          </ul>
 
-      <button
-          onClick={onServiceChange}
-          className="btn btn-primary btn-sm">
-        Change Service
-      </button>
-    </div>
-  );
-};
+          <button
+              onClick={onServiceChange}
+              className="btn btn-primary btn-sm">
+            Change Service
+          </button>
+        </div>
+      );
+    };
 
-export default Header;
+    export default Header;
 
 
 
@@ -4418,33 +4428,33 @@ export default Header;
 -Параметр exact (точный, актуальный, верный) говорит, что нужно использовать
   точное совпадение (а не "path является частью адреса")
 
-<!-- app.js -->
-export default class App extends Component {
+    <!-- app.js -->
+    export default class App extends Component {
 
-  ........
+      ........
 
-    return (
-      <ErrorBoundry>
-        <SwapiServiceProvider value={this.state.swapiService}>
-          <Router>
-            <div className="stardb-app">
-              <Header onServiceChange={this.onServiceChange} />
-              <RandomPlanet />
+        return (
+          <ErrorBoundry>
+            <SwapiServiceProvider value={this.state.swapiService}>
+              <Router>
+                <div className="stardb-app">
+                  <Header onServiceChange={this.onServiceChange} />
+                  <RandomPlanet />
 
-              <Route path="/"                                       <-------
-                     render={() => <h2>Welcom to StarWars DB</h2>}  <------
-                     exact={true} />                                <--------
-              <Route path="/people" component={PeoplePage} />
-              <Route path="/planets" component={PlanetPage} />
-              <Route path="/starships" component={StarshipPage} />
+                  <Route path="/"                                       <-------
+                         render={() => <h2>Welcom to StarWars DB</h2>}  <------
+                         exact={true} />                                <--------
+                  <Route path="/people" component={PeoplePage} />
+                  <Route path="/planets" component={PlanetPage} />
+                  <Route path="/starships" component={StarshipPage} />
 
-            </div>
-          </Router>
-        </SwapiServiceProvider>
-      </ErrorBoundry>
-    );
-  };  
-};
+                </div>
+              </Router>
+            </SwapiServiceProvider>
+          </ErrorBoundry>
+        );
+      };  
+    };
 
 
 
@@ -4460,44 +4470,44 @@ export default class App extends Component {
 -Если не установить exact, то путь /people будет срабатывать всегда,
   когда срабатывает /people/:id
 
-<!-- app.js -->
+    <!-- app.js -->
 
-.......
+    .......
 
-render() {
+    render() {
 
-  if (this.state.hasError) {
-    return <ErrorIndicator />
-  };
+      if (this.state.hasError) {
+        return <ErrorIndicator />
+      };
 
-  return (
-    <ErrorBoundry>
-      <SwapiServiceProvider value={this.state.swapiService}>
-        <Router>
-          <div className="stardb-app">
-            <Header onServiceChange={this.onServiceChange} />
-            <RandomPlanet />
+      return (
+        <ErrorBoundry>
+          <SwapiServiceProvider value={this.state.swapiService}>
+            <Router>
+              <div className="stardb-app">
+                <Header onServiceChange={this.onServiceChange} />
+                <RandomPlanet />
 
-            <Route path="/" 
-                    render={() => <h2>Welcom to StarWars DB</h2>}
-                    exact={true} />
-            <Route path="/people" 
-                    render={() => <h2>People</h2>}
-                    exact={true} />       
-            <Route path="/people" component={PeoplePage} />
-            <Route path="/planets" component={PlanetPage} />
-            <Route path="/starships" exact component={StarshipPage} />  <------
-            <Route path="/starships/:id"                                <-------
-                    render={({ match }) => {                            <-------
-                    const { id } = match.params;                        <-------
-                    return <StarshipDetails itemId={id}/>}} />        <-------
+                <Route path="/" 
+                        render={() => <h2>Welcom to StarWars DB</h2>}
+                        exact={true} />
+                <Route path="/people" 
+                        render={() => <h2>People</h2>}
+                        exact={true} />       
+                <Route path="/people" component={PeoplePage} />
+                <Route path="/planets" component={PlanetPage} />
+                <Route path="/starships" exact component={StarshipPage} />  <------
+                <Route path="/starships/:id"                                <-------
+                        render={({ match }) => {                            <-------
+                        const { id } = match.params;                        <-------
+                        return <StarshipDetails itemId={id}/>}} />        <-------
 
-          </div>
-        </Router>
-      </SwapiServiceProvider>
-    </ErrorBoundry>
-    );
-  };  
+              </div>
+            </Router>
+          </SwapiServiceProvider>
+        </ErrorBoundry>
+        );
+      };  
 
 
 
@@ -4517,24 +4527,24 @@ render() {
 
   export default withRouter(MyComponent);
 
-<!-- starship-page.js -->
+    <!-- starship-page.js -->
 
-// ИЗ КОМПОНЕНТА КЛАССА ПЕРЕПИСАЛ В КОМПОНЕНТ ФУНКЦИЮ
+    // ИЗ КОМПОНЕНТА КЛАССА ПЕРЕПИСАЛ В КОМПОНЕНТ ФУНКЦИЮ
 
-import React from 'react';
-import { StarshipList } from '../sw-components'
-import { withRouter } from 'react-router-dom';    <-------
+    import React from 'react';
+    import { StarshipList } from '../sw-components'
+    import { withRouter } from 'react-router-dom';    <-------
 
-const StarshipPage = ({ history }) => {             <-------
-  return (
-    <StarshipList 
-      onItemSelected={(itemId) => {
-        history.push(`/starships/${itemId}`);     ........
-      }} />
-  )
-};                                                  <-------
+    const StarshipPage = ({ history }) => {             <-------
+      return (
+        <StarshipList 
+          onItemSelected={(itemId) => {
+            history.push(`/starships/${itemId}`);     ........
+          }} />
+      )
+    };                                                  <-------
 
-export default withRouter(StarshipPage);
+    export default withRouter(StarshipPage);
 
 
 
@@ -4599,61 +4609,61 @@ const StarshipPage = ({ history }) => {
 -Адрес должен содержать ID открытого элемента (тогда открыв тот же 
   URL пользователь попадает на тот же "экран")
 
-<!-- people-page.js -->
+    <!-- people-page.js -->
 
-// ИЗ КОМПОНЕНТА КЛАССА ПЕРЕПИСАЛ В КОМПОНЕНТ ФУНКЦИЮ
+    // ИЗ КОМПОНЕНТА КЛАССА ПЕРЕПИСАЛ В КОМПОНЕНТ ФУНКЦИЮ
 
-import React from 'react';
-import Row from '../row';
-import { PersonDetails, PersonList } from '../sw-components'
-import { withRouter } from 'react-router-dom';                        <--------
+    import React from 'react';
+    import Row from '../row';
+    import { PersonDetails, PersonList } from '../sw-components'
+    import { withRouter } from 'react-router-dom';                        <--------
 
-const PeoplePage = ({ history, match }) => {                            <--------
-  const { id } = match.params;                                          <--------
+    const PeoplePage = ({ history, match }) => {                            <--------
+      const { id } = match.params;                                          <--------
 
-  return (
-    <Row 
-      left={<PersonList onItemSelected={(id) => history.push(id)} />}   <--------
-      right={<PersonDetails itemId={id} />} />                          <--------
-  )
-};
+      return (
+        <Row 
+          left={<PersonList onItemSelected={(id) => history.push(id)} />}   <--------
+          right={<PersonDetails itemId={id} />} />                          <--------
+      )
+    };
 
-export default withRouter(PeoplePage);                            <--------
+    export default withRouter(PeoplePage);                            <--------
 
-<!-- APP.JS -->
+    <!-- APP.JS -->
 
-........
+    ........
 
-return (
-  <ErrorBoundry>
-    <SwapiServiceProvider value={this.state.swapiService}>
-      <Router>
-        <div className="stardb-app">
-          <Header onServiceChange={this.onServiceChange} />
-          <RandomPlanet />
+    return (
+      <ErrorBoundry>
+        <SwapiServiceProvider value={this.state.swapiService}>
+          <Router>
+            <div className="stardb-app">
+              <Header onServiceChange={this.onServiceChange} />
+              <RandomPlanet />
 
-          <Route path="/" 
-                  render={() => <h2>Welcom to StarWars DB</h2>}
-                  exact={true} />
-          <Route path="/people" 
-                  render={() => <h2>People</h2>}
-                  exact={true} />       
-          <Route path="/people/:id?" component={PeoplePage} />        <-Добавил:  /:id?->
-          <Route path="/planets" component={PlanetPage} />
-          <Route path="/starships" exact component={StarshipPage} />
-          <Route path="/starships/:id" 
-                  render={({ match }) => {
-                  const { id } = match.params;
-                  return <StarshipDetails itemId={id}/>}} />
+              <Route path="/" 
+                      render={() => <h2>Welcom to StarWars DB</h2>}
+                      exact={true} />
+              <Route path="/people" 
+                      render={() => <h2>People</h2>}
+                      exact={true} />       
+              <Route path="/people/:id?" component={PeoplePage} />        <-Добавил:  /:id?->
+              <Route path="/planets" component={PlanetPage} />
+              <Route path="/starships" exact component={StarshipPage} />
+              <Route path="/starships/:id" 
+                      render={({ match }) => {
+                      const { id } = match.params;
+                      return <StarshipDetails itemId={id}/>}} />
 
-        </div>
-      </Router>
-    </SwapiServiceProvider>
-  </ErrorBoundry>
-);
+            </div>
+          </Router>
+        </SwapiServiceProvider>
+      </ErrorBoundry>
+    );
 
 
-........
+    ........
 
 
 
@@ -4668,157 +4678,157 @@ return (
   НЕ ОБЕСПЕЧИВАЕТ БЕЗОПАСНОСТЬ в приложении (проверка прав 
   должна проводится на сервере)
 
-<!-- secret-page.js -->
-import React from 'react';                                <-------
-import { Redirect } from 'react-router-dom';
+    <!-- secret-page.js -->
+    import React from 'react';                                <-------
+    import { Redirect } from 'react-router-dom';
 
-const SecretPage = ({ isLoggedIn }) => {
+    const SecretPage = ({ isLoggedIn }) => {
 
-  if (isLoggedIn) {
-    return (
-      <div className="jumbotron text-center">           .........
-        <h3>This page is full of decrets!</h3>
-      </div>
-    )
-  };
+      if (isLoggedIn) {
+        return (
+          <div className="jumbotron text-center">           .........
+            <h3>This page is full of decrets!</h3>
+          </div>
+        )
+      };
 
-  return <Redirect to="/login" />
-};                                                        <-------
+      return <Redirect to="/login" />
+    };                                                        <-------
 
-export default SecretPage;
+    export default SecretPage;
 
-<!-- login-page.js -->
-import React from 'react';                              <-------
-import { Redirect } from 'react-router-dom';
+    <!-- login-page.js -->
+    import React from 'react';                              <-------
+    import { Redirect } from 'react-router-dom';
 
-const LoginPage = ({ isLoggedIn, onLogin }) => {
+    const LoginPage = ({ isLoggedIn, onLogin }) => {
 
-  if (isLoggedIn) {
-    return <Redirect to="/" />
-  }
+      if (isLoggedIn) {
+        return <Redirect to="/" />
+      }
 
-  return (
-    <div className="jumbotron">
-      <p>Login to see secret page!</p>                .......
-      <button 
-        className="btn btn-primary"
-        onClick={onLogin} >
-          Login
-      </button>
-    </div>
-  );
-};
-
-export default LoginPage;                               <-------
-
-<!-- header.js -->
-
-.......
-
-const Header = ({ onServiceChange }) => {
-  return (
-    <div className="header d-flex">
-      <h3>
-        <Link to="/">
-          Star DB
-        </Link>
-      </h3>
-      <ul className="d-flex">
-        <li>
-          <Link to="/people/">People</Link>
-        </li>
-        <li>
-        <Link to="/planets/">Planets</Link>
-        </li>
-        <li>
-        <Link to="/starships/">Starships</Link>
-        </li>
-        <li>
-        <Link to="/login">Login</Link>              <--------
-        </li>
-        <li>
-        <Link to="/secret">Secret</Link>            <--------
-        </li>
-      </ul>
-
-      <button
-          onClick={onServiceChange}
-          className="btn btn-primary btn-sm">
-        Change Service
-      </button>
-    </div>
-  );
-};
-
-.......
-
-<!-- app.js -->
-import React, { Component } from 'react';
-
-........
-
-import { 
-  PeoplePage, 
-  PlanetPage, 
-  StarshipPage, 
-  LoginPage,                                                      <-------
-  SecretPage } from '../pages';                                     <-------
-
-.........
-
-export default class App extends Component {
-
-  state = {
-    hasError: false,
-    swapiService: new SwapiService(),
-    // swapiService: new DummySwapiService()
-    isLoggedIn: false,                                        <-------
-  };
-
-  onLogin = () => {                                             <-------
-    this.setState({
-      isLoggedIn: true                                          ........
-    });
-  } ;                                                           <-------
-
-  ....................
-
-  render() {
-
-    const { isLoggedIn } = this.state;                            <-------
-
-    if (this.state.hasError) {
-      return <ErrorIndicator />
+      return (
+        <div className="jumbotron">
+          <p>Login to see secret page!</p>                .......
+          <button 
+            className="btn btn-primary"
+            onClick={onLogin} >
+              Login
+          </button>
+        </div>
+      );
     };
 
-    return (
-      <ErrorBoundry>
-        <SwapiServiceProvider value={this.state.swapiService}>
-          <Router>
-            <div className="stardb-app">
-              <Header onServiceChange={this.onServiceChange} />
-              <RandomPlanet />
+    export default LoginPage;                               <-------
 
-             ...................
+    <!-- header.js -->
 
-              <Route                                          <-------
-                path="/login"
-                render={() => (
-                  <LoginPage                                ........
-                  isLoggedIn={isLoggedIn}
-                  onLogin={this.onLogin} />
-                )} />                                           <-------
-              <Route                                            <-------
-                path="/secret"
-                render={() => (                               .........
-                  <SecretPage isLoggedIn={isLoggedIn}/>
-                )} />                                           <-------
+    .......
 
-            </div>
-          </Router>
-        </SwapiServiceProvider>
-      </ErrorBoundry>
-    );
-  };  
-};
+    const Header = ({ onServiceChange }) => {
+      return (
+        <div className="header d-flex">
+          <h3>
+            <Link to="/">
+              Star DB
+            </Link>
+          </h3>
+          <ul className="d-flex">
+            <li>
+              <Link to="/people/">People</Link>
+            </li>
+            <li>
+            <Link to="/planets/">Planets</Link>
+            </li>
+            <li>
+            <Link to="/starships/">Starships</Link>
+            </li>
+            <li>
+            <Link to="/login">Login</Link>              <--------
+            </li>
+            <li>
+            <Link to="/secret">Secret</Link>            <--------
+            </li>
+          </ul>
+
+          <button
+              onClick={onServiceChange}
+              className="btn btn-primary btn-sm">
+            Change Service
+          </button>
+        </div>
+      );
+    };
+
+    .......
+
+    <!-- app.js -->
+    import React, { Component } from 'react';
+
+    ........
+
+    import { 
+      PeoplePage, 
+      PlanetPage, 
+      StarshipPage, 
+      LoginPage,                                                      <-------
+      SecretPage } from '../pages';                                     <-------
+
+    .........
+
+    export default class App extends Component {
+
+      state = {
+        hasError: false,
+        swapiService: new SwapiService(),
+        // swapiService: new DummySwapiService()
+        isLoggedIn: false,                                        <-------
+      };
+
+      onLogin = () => {                                             <-------
+        this.setState({
+          isLoggedIn: true                                          ........
+        });
+      } ;                                                           <-------
+
+      ....................
+
+      render() {
+
+        const { isLoggedIn } = this.state;                            <-------
+
+        if (this.state.hasError) {
+          return <ErrorIndicator />
+        };
+
+        return (
+          <ErrorBoundry>
+            <SwapiServiceProvider value={this.state.swapiService}>
+              <Router>
+                <div className="stardb-app">
+                  <Header onServiceChange={this.onServiceChange} />
+                  <RandomPlanet />
+
+                 ...................
+
+                  <Route                                          <-------
+                    path="/login"
+                    render={() => (
+                      <LoginPage                                ........
+                      isLoggedIn={isLoggedIn}
+                      onLogin={this.onLogin} />
+                    )} />                                           <-------
+                  <Route                                            <-------
+                    path="/secret"
+                    render={() => (                               .........
+                      <SecretPage isLoggedIn={isLoggedIn}/>
+                    )} />                                           <-------
+
+                </div>
+              </Router>
+            </SwapiServiceProvider>
+          </ErrorBoundry>
+        );
+      };  
+    };
 
